@@ -123,43 +123,39 @@ const mixins = {
     buttonLine: {
         padding: "10px 0px",
     },
-    percentage(base, percent) {
+    percentage(percent) {
         if (isNaN(percent)) {
             return {
-                ...base,
                 color: "#666",
             }
         }
         if (percent < 20) {
             return {
-                ...base,
                 color: "#660000",
             }
         }
         if (percent < 40) {
             return {
-                ...base,
                 color: "#88450a",
             }
         }
         if (percent < 60) {
             return {
-                ...base,
                 color: "#a18d4b",
             }
         }
         if (percent < 80) {
             return {
-                ...base,
                 color: "#496613",
             }
         }
         return {
-            ...base,
             color: "#090",
         }
     },
     panel: {
+        border: "1px solid #ccc",
+        borderRadius: "5px",
         padding: "30px",
         background: "#fff",
         color: "#333",
