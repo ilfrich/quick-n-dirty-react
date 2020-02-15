@@ -45,17 +45,19 @@ const style = {
  * @returns {object} a React component's rendering
  */
 const Popup = props => {
+    const customButtonStyle = props.buttonStyle || {}
+    const customTitleStyle = props.titleStyle || {}
     return (
         <div>
             <div style={style.backdrop(props.zIndex)} onClick={props.no || props.cancel} />
             <div style={style.popup(props.zIndex)}>
-                <div style={style.title}>{props.title}</div>
+                <div style={{ ...style.title, ...customTitleStyle }}>{props.title}</div>
                 <div style={style.body}>{props.children}</div>
                 <div style={style.buttons}>
                     {/* delete dialog */}
                     {props.yes != null && props.no != null
                         ? [
-                              <button key="yes" type="button" style={mixins.button} onClick={props.yes}>
+                              <button key="yes" type="button" style={{ ...mixins.button, ...customButtonStyle }} onClick={props.yes}>
                                   Yes
                               </button>,
                               <button key="no" type="button" style={mixins.inverseButton} onClick={props.no}>
@@ -66,7 +68,7 @@ const Popup = props => {
                     {/* ok dialog */}
                     {props.ok != null && props.cancel != null
                         ? [
-                              <button key="ok" type="button" style={mixins.button} onClick={props.ok}>
+                              <button key="ok" type="button" style={{ ...mixins.button, ...customButtonStyle }} onClick={props.ok}>
                                   Ok
                               </button>,
                               <button key="cancel" type="button" style={mixins.inverseButton} onClick={props.cancel}>

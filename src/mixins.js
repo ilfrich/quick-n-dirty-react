@@ -4,6 +4,13 @@
  *
  */
 const mixins = {
+    // layout related
+    clearFix: {
+        clear: "both",
+    },
+    relative: {
+        position: "relative",
+    },
     right: {
         textAlign: "right",
     },
@@ -13,15 +20,83 @@ const mixins = {
     center: {
         textAlign: "center",
     },
-    clickable: {
-        cursor: "pointer",
+    vSpacer(height) {
+        return {
+            height: `${height}px`,
+            display: "block",
+        }
     },
+    indent: px => ({
+        paddingLeft: `${px}px`,
+    }),
+    flexRow: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+    },
+    noList: {
+        margin: "0px",
+        padding: "0px",
+        listStyle: "none",
+    },
+    trimOverflow: {
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+    },
+
+    // text related
     white: {
         color: "#eee",
     },
-    bold: {
-        fontWeight: "bold",
+    red: {
+        color: "#933",
     },
+    green: {
+        color: "#393",
+    },
+    bold: {
+        fontWeight: "600",
+    },
+    smallFont: {
+        fontSize: "13px",
+    },
+    textLink: {
+        color: "#0099ff",
+        textDecoration: "underline",
+    },
+    percentage(percent) {
+        if (isNaN(percent)) {
+            return {
+                color: "#666",
+            }
+        }
+        if (percent < 20) {
+            return {
+                color: "#660000",
+            }
+        }
+        if (percent < 40) {
+            return {
+                color: "#88450a",
+            }
+        }
+        if (percent < 60) {
+            return {
+                color: "#a18d4b",
+            }
+        }
+        if (percent < 80) {
+            return {
+                color: "#496613",
+            }
+        }
+        return {
+            color: "#090",
+        }
+    },
+
+    // components
     backdrop: {
         position: "fixed",
         top: "0",
@@ -29,12 +104,6 @@ const mixins = {
         background: "rgba(60, 60, 60, 0.3)",
         width: "100%",
         height: "100%",
-    },
-    clearFix: {
-        clear: "both",
-    },
-    relative: {
-        position: "relative",
     },
     popup: {
         container: {
@@ -67,6 +136,23 @@ const mixins = {
             cursor: "pointer",
         },
     },
+    infoBox: {
+        padding: "15px 25px",
+        border: "1px solid #ccc",
+        margin: "5px 5px 25px 5px",
+        color: "#999",
+        background: "#efefef",
+        fontSize: "13px",
+    },
+    panel: {
+        border: "1px solid #ccc",
+        borderRadius: "5px",
+        padding: "30px",
+        background: "#fff",
+        color: "#333",
+    },
+
+    // form related
     label: {
         display: "inline-block",
         maxWidth: "100%",
@@ -96,7 +182,7 @@ const mixins = {
     button: {
         borderRadius: "0px",
         padding: "6px 10px",
-        minWidth: "100px",
+        minWidth: "120px",
         borderColor: "#006",
         background: "#004",
         fontSize: "14px",
@@ -123,90 +209,14 @@ const mixins = {
     buttonLine: {
         padding: "10px 0px",
     },
-    percentage(percent) {
-        if (isNaN(percent)) {
-            return {
-                color: "#666",
-            }
-        }
-        if (percent < 20) {
-            return {
-                color: "#660000",
-            }
-        }
-        if (percent < 40) {
-            return {
-                color: "#88450a",
-            }
-        }
-        if (percent < 60) {
-            return {
-                color: "#a18d4b",
-            }
-        }
-        if (percent < 80) {
-            return {
-                color: "#496613",
-            }
-        }
-        return {
-            color: "#090",
-        }
-    },
-    panel: {
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-        padding: "30px",
-        background: "#fff",
-        color: "#333",
-    },
-    smallFont: {
-        fontSize: "13px",
-    },
-    vSpacer(height) {
-        return {
-            height: `${height}px`,
-            display: "block",
-        }
-    },
-    trimOverflow: {
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-    },
-    red: {
-        color: "#933",
-    },
-    green: {
-        color: "#393",
-    },
-    noList: {
-        margin: "0px",
-        padding: "0px",
-        listStyle: "none",
-    },
-    textLink: {
-        color: "#0099ff",
-        textDecoration: "underline",
-    },
-    indent: px => ({
-        paddingLeft: `${px}px`,
-    }),
-    flexRow: {
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-    },
-    infoBox: {
-        padding: "15px 25px",
-        border: "1px solid #ccc",
-        margin: "5px 5px 25px 5px",
-        color: "#999",
-        background: "#efefef",
-        fontSize: "13px",
+
+    // other
+    clickable: {
+        cursor: "pointer",
     },
 }
 
+// additional buttons
 mixins.buttonDisabled = {
     ...mixins.button,
     background: "#79818f",

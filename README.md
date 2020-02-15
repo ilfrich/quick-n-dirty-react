@@ -12,19 +12,193 @@ npm install --save quick-n-dirty-react
 
 A combined component to provide a "From" and "To" date for a date range.
 
+**Example**
+
+```jsx harmony
+import React from "react"
+import moment from "moment"
+import { DateRangeSelect } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props)
+        // init your own components proxy for the current values
+        this.state = {
+            fromDate: moment(),
+            toDate: moment(),
+        }
+        // register event handlers
+        this.setFrom = this.setFrom.bind(this)
+        this.setTo = this.setTo.bind(this)                 
+    }
+    
+    // register event handlers for changing from / to date
+    
+    setFrom(newDate) {
+        this.setState({ toDate: newDate })
+    }
+    
+    setTo(newDate) {
+        this.setState({ fromDate: newDate })
+    }
+    
+    render() {
+        // provide initial values and change handlers for both dates
+        return (
+            <div>
+                <DateRangeSelect 
+                    changeFrom={this.setFrom} 
+                    changeTo={this.setTo}
+                    defaultFrom={this.state.fromDate}
+                    defaultTo={this.state.toDate}
+                />
+            </div>
+        )
+    }
+}
+```
+
 ### `PercentageBar`
 
 A basic coloured percentage bar 
+
+**Example**
+
+```jsx harmony
+import React from "react"
+import { PercentageBar } from "quick-n-dirty-react"
+
+// show 2 percentage bars (200px wide), 
+// - ne showing the label 85%
+// - the other one just displaying the bar
+const MyComponent = props => (
+    <div>
+        <PercentageBar percentage={85} width={200} />
+        <PercentageBar percentage={15} width={200} hideNumber />
+    </div>
+)
+```
 
 ### `Popup`
 
 A basic popup with a semi-transparent backdrop and action buttons (yes/no or ok/cancel).
 
+**Example**
+
+```jsx harmony
+import React from "react"
+import { Popup } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            showPopup: false,
+        }
+        this.togglePopup = this.togglePopup.bind(this)
+        this.confirmAction = this.confirmAction.bind(this)
+    }
+    
+    togglePopup() {
+        this.setState(oldState => ({
+            ...oldState,
+            showPopup: !oldState.showPopup,
+        }))
+    }
+    
+    confirmAction() {
+        // <input> in the popup
+        const value = this.inputField.value
+        // do something with it, once the user presses ok/yes
+        
+        // at the end, close the popup
+        this.togglePopup()
+    }
+    
+    render() {
+        return (
+            <div>
+                <button type="button" onClick={this.togglePopup}>Show Popup</button>
+                {/* only show popup, if the user has clicked on the button */}
+                {this.state.showPopup ? (
+                    <Popup title="Provide title here" cancel={this.togglePopup} ok={this.confirmAction}>
+                        <p>Provide some text in the input below:</p>
+                        <input type="text" ref={el => { this.inputField = el }} />
+                    </Popup> 
+                ) : null}
+            </div>
+        )
+    }
+}
+```
+
+There are 2 ways to provide event handlers, which will change the button texts:
+
+- Provide `yes`, `no` and `cancel`: will render "Yes" / "No" button, `cancel` is used when the user clicks outside of 
+the popup
+- Provide `ok` and `cancel`: will render "Yes" / "Cancel" button, where the "Cancel" button uses the same event handler 
+as clicking outside of the popup
+
+The default colour for the title of the popup and the "OK" / "Yes" button is `#004` (dark blue)
+
+To override this, you can simply provide `buttonStyle` and/or `titleStyle` parameters to the component:
+
+```jsx harmony
+import React from "react"
+import { Popup } from "quick-n-dirty-react"
+
+const render = <Popup 
+                    ok={...} 
+                    cancel={...} 
+                    title="My Title" 
+                    buttonStyle={{ background: "#F00" }} 
+                    titleStyle={{ color: "#F00", background: "#FFF" }}
+                >
+                    <p>Popup body text</p>
+                </Popup>
+```
+
 ## CSS Mixins
 
-- **Form** related: to describe
-- **Layout** related: to describe
-- **Text** related: to describe
-- **Color** related: to describe
-- **Spacing** related: to describe
-- **Popup** related: to describe
+**Form related:**
+
+- `label` - used for `<label>` tags to provide some form label above the input
+- `textInput` - used for `<input type="text|number|date" /> to display an elegant text input
+- `formLine` - basic padding and text align short cut
+- `buttonLine` - line with some spacing for button below a form
+- `button` - better than default HTML button (padding, border, background)
+- `inverseButton` - similar to `button`, less aggressive style
+- `buttonDisabled` - some additional styles for disabled buttons
+- `buttonPending` - while some request is in progress, this will indicate background activity
+
+**Layout related**:
+
+- `vSpacer(height)` - vertical spacer (block div)
+- `indent(px)` - left padding for `px` pixels
+- `flexRow` - shortcut for `flex` with `row` `wrap`
+- `noList` - removes any dots and indentation from lists
+- `trimOverflow` - any  text overflow will be cut short with "..." (remember to add `title=".."` to your component where 
+you provide the full text if required)
+
+**Text related:**
+
+- `white`, `red` and `green` - for text color
+- `bold` - for bold text
+- `smallFont` - 13px font size
+- `percentage(percent)` -  provides a red (0) to green (100) spectrum of colours in 20% intervals for the provided 
+number
+
+**Popup related:**
+
+- `backdrop` - shortcut for a fixed full screen transparent background div
+- `popup.container` - box in the middle of the screen
+- `popup.header` - some formatting for header of popup
+- `popup.body` - some formatting for body of popup
+- `popup.footer` - some formatting for the area in a popup where you'd find the buttons
+- `close` - close icon for the popup (top right)
+
+**Other Components:**
+
+- `infoBox` - a little box with smaller font, background and border to display hints
+- `panel` - some basic formatting for a panel with border radius 
+- `clickable` - shortcut for `cursor: pointer`
