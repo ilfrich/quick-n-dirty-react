@@ -1,6 +1,6 @@
 module.exports = {
-    DateRangeSelect: require("./dist/DateRangeSelect"),
-    PercentageBar: require("./dist/PercentageBar"),
-    Popup: require("./dist/Popup"),
-    mixins: require("./dist/mixins"),
+    DateRangeSelect: require("./dist/DateRangeSelect").default,
+    PercentageBar: require("./dist/PercentageBar").default,
+    Popup: require("./dist/Popup").default,
+    mixins: require("./dist/mixins").default,
 }
