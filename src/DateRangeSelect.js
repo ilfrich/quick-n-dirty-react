@@ -1,7 +1,7 @@
 import React from "react"
 import moment from "moment"
-import mixins from "./mixins"
 import util from "quick-n-dirty-utils"
+import mixins from "./mixins"
 
 const style = {
     dateSelectContainer: {

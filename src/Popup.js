@@ -57,7 +57,12 @@ const Popup = props => {
                     {/* delete dialog */}
                     {props.yes != null && props.no != null
                         ? [
-                              <button key="yes" type="button" style={{ ...mixins.button, ...customButtonStyle }} onClick={props.yes}>
+                              <button
+                                  key="yes"
+                                  type="button"
+                                  style={{ ...mixins.button, ...customButtonStyle }}
+                                  onClick={props.yes}
+                              >
                                   Yes
                               </button>,
                               <button key="no" type="button" style={mixins.inverseButton} onClick={props.no}>
@@ -68,7 +73,12 @@ const Popup = props => {
                     {/* ok dialog */}
                     {props.ok != null && props.cancel != null
                         ? [
-                              <button key="ok" type="button" style={{ ...mixins.button, ...customButtonStyle }} onClick={props.ok}>
+                              <button
+                                  key="ok"
+                                  type="button"
+                                  style={{ ...mixins.button, ...customButtonStyle }}
+                                  onClick={props.ok}
+                              >
                                   Ok
                               </button>,
                               <button key="cancel" type="button" style={mixins.inverseButton} onClick={props.cancel}>

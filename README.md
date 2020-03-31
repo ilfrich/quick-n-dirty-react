@@ -6,6 +6,12 @@ Little library of React components and utilities for frontend development
 npm install --save quick-n-dirty-react
 ```
 
+1. [DateRangeSelect](#daterangeselect)
+2. [PercentageBar](#percentagebar)
+3. [Popup](#popup)
+4. [NotificationBar](#notificationbar)
+5. [CSS Mixins](#css-mixins)
+
 ## Components
 
 ### `DateRangeSelect`
@@ -157,6 +163,44 @@ const render = <Popup
                     <p>Popup body text</p>
                 </Popup>
 ```
+
+### `NotificationBar`
+
+Embeds a container into any component that has a fixed position and will be invisible as long as no message is emitted 
+to the component. It needs to be bound to another React component that will emit the message.
+
+Usage:
+
+```javascript
+class MyComponent extends React.Component {
+    someHandler() {
+        this.alert.error("Something bad happened!")
+    }
+
+    render() {
+        return (
+            <div>
+                 <NotificationBar ref={el => { this.alert = el }} timeout={2500} position="right" />
+            </div>
+        )
+    }
+}
+```
+
+> In the `render` method you create a reference `this.alert` for the notification bar component. Then in a handler of 
+> the same component you can simply add a message.
+
+**Methods** of `NotificationBar`:
+
+- `error(message)` - display a message on red background (something went wrong)
+- `info(message)` - display a message on yellow background (e.g. a warning or info message)
+- `success(message)` - display a message on green background (e.g. confirmation)
+
+**Properties** of `NotificationBar`:
+
+- `timeout` - default `3000` - number of milliseconds, before a message disappears
+- `position` - default `bottom` - where to display the message (`top`, `bottom`, `left` (top-left), and `right` 
+ (top right))
 
 ## CSS Mixins
 

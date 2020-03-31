@@ -8,10 +8,12 @@ const style = {
         gridTemplateColumns: width ? `${width}px 40px` : "200px 40px",
         gridColumnGap: "10px",
         height: "18px",
+        textAlign: "left",
     }),
     barContainer: width => ({
         border: "1px solid #d3d3d3",
         width: width ? `${width}px` : "200px",
+        height: "20px",
     }),
     bar: (percentage, width) => {
         const finalWidth = width || 200
@@ -21,7 +23,6 @@ const style = {
             width: `${Math.round((percentage * finalWidth) / 100)}px`,
             background: color,
             height: "20px",
-            marginTop: "1px",
         }
     },
     number: {
@@ -30,9 +31,16 @@ const style = {
     },
 }
 
+const getTitle = props => {
+    if (props.title == null) {
+        return props.percentage.toFixed(0)
+    }
+    return `${props.title} / ${props.percentage.toFixed()}%`
+}
+
 const PercentageBar = props => (
     <div style={style.container(props.width)}>
-        <div style={style.barContainer(props.width)}>
+        <div style={style.barContainer(props.width)} title={getTitle(props)}>
             <div style={style.bar(props.percentage, props.width)} />
         </div>
         {props.hideNumber ? null : <div style={style.number}>{props.percentage.toFixed(0)}%</div>}

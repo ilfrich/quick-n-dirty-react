@@ -3,4 +3,5 @@ module.exports = {
     PercentageBar: require("./dist/PercentageBar").default,
     Popup: require("./dist/Popup").default,
     mixins: require("./dist/mixins").default,
+    NotificationBar: require("./dist/NotificationBar").default,
 }
