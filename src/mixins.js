@@ -64,6 +64,7 @@ const mixins = {
     textLink: {
         color: "#0099ff",
         textDecoration: "underline",
+        cursor: "pointer",
     },
     percentage(percent) {
         if (isNaN(percent)) {
