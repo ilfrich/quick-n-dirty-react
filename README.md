@@ -74,9 +74,10 @@ A basic coloured percentage bar
 import React from "react"
 import { PercentageBar } from "quick-n-dirty-react"
 
-// show 2 percentage bars (200px wide), 
-// - ne showing the label 85%
-// - the other one just displaying the bar
+// show 3 percentage bars (200px wide), 
+// - the first one showing the label 85%
+// - the second one just displaying the bar
+// - the third one displaying additional message on hover: ${title} / ${percentage}
 const MyComponent = props => (
     <div>
         <PercentageBar percentage={85} width={200} />
