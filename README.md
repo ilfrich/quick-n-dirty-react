@@ -172,6 +172,9 @@ to the component. It needs to be bound to another React component that will emit
 Usage:
 
 ```javascript
+import React from "react"
+import { NotificationBar } from "quick-n-dirty-react"
+
 class MyComponent extends React.Component {
     someHandler() {
         this.alert.error("Something bad happened!")
