@@ -81,6 +81,7 @@ const MyComponent = props => (
     <div>
         <PercentageBar percentage={85} width={200} />
         <PercentageBar percentage={15} width={200} hideNumber />
+        <PercentageBar percentage={15} width={200} hideNumber title="Some extra text displayed on hover" />
     </div>
 )
 ```
