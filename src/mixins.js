@@ -105,16 +105,20 @@ const mixins = {
         background: "rgba(60, 60, 60, 0.3)",
         width: "100%",
         height: "100%",
+        zIndex: "600",
     },
     popup: {
-        container: {
+        container: width => ({
             margin: "auto",
-            marginTop: "150px",
+            top: "100px",
+            width: `${width}px`,
+            left: `calc(50% - ${Math.round(width / 2)}px)`,
             background: "#eee",
             border: "1px solid #eee",
             borderRadius: "10px",
-            position: "relative",
-        },
+            position: "fixed",
+            zIndex: "601",
+        }),
         header: {
             borderBottom: "1px solid #ccc",
             fontSize: "18px",
