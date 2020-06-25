@@ -41,11 +41,11 @@ class MyComponent extends React.Component {
     // register event handlers for changing from / to date
     
     setFrom(newDate) {
-        this.setState({ toDate: newDate })
+        this.setState({ fromDate: newDate })
     }
     
     setTo(newDate) {
-        this.setState({ fromDate: newDate })
+        this.setState({ toDate: newDate })
     }
     
     render() {
