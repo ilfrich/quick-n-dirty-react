@@ -214,6 +214,9 @@ const mixins = {
     buttonLine: {
         padding: "10px 0px",
     },
+    checkbox: {
+        marginRight: "8px",
+    },
 
     // other
     clickable: {

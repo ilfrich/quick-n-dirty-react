@@ -4,4 +4,5 @@ module.exports = {
     Popup: require("./dist/Popup").default,
     mixins: require("./dist/mixins").default,
     NotificationBar: require("./dist/NotificationBar").default,
+    ToggleSection: require("./dist/ToggleSection").default,
 }
