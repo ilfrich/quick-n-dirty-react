@@ -46,11 +46,17 @@ const style = {
  */
 const Popup = props => {
     const customButtonStyle = props.buttonStyle || {}
+    const customCancelButtonStyle = props.cancelButtonStyle || {}
     const customTitleStyle = props.titleStyle || {}
+    const customBackdropStyle = props.backdropStyle || {}
+    const customPopupStyle = props.popupStyle || {}
     return (
         <div>
-            <div style={style.backdrop(props.zIndex)} onClick={props.no || props.cancel} />
-            <div style={style.popup(props.zIndex)}>
+            <div
+                style={{ ...style.backdrop(props.zIndex), ...customBackdropStyle }}
+                onClick={props.no || props.cancel || props.ok}
+            />
+            <div style={{ ...style.popup(props.zIndex), ...customPopupStyle }}>
                 <div style={{ ...style.title, ...customTitleStyle }}>{props.title}</div>
                 <div style={style.body}>{props.children}</div>
                 <div style={style.buttons}>
@@ -65,7 +71,12 @@ const Popup = props => {
                               >
                                   Yes
                               </button>,
-                              <button key="no" type="button" style={mixins.inverseButton} onClick={props.no}>
+                              <button
+                                  key="no"
+                                  type="button"
+                                  style={{ ...mixins.inverseButton, ...customCancelButtonStyle }}
+                                  onClick={props.no}
+                              >
                                   No
                               </button>,
                           ]
@@ -81,11 +92,26 @@ const Popup = props => {
                               >
                                   Ok
                               </button>,
-                              <button key="cancel" type="button" style={mixins.inverseButton} onClick={props.cancel}>
+                              <button
+                                  key="cancel"
+                                  type="button"
+                                  style={{ ...mixins.inverseButton, ...customCancelButtonStyle }}
+                                  onClick={props.cancel}
+                              >
                                   Cancel
                               </button>,
                           ]
                         : null}
+                    {props.ok != null && props.yes == null && props.cancel == null ? (
+                        <button
+                            key="ok"
+                            type="button"
+                            style={{ ...mixins.button, ...customButtonStyle }}
+                            onClick={props.ok}
+                        >
+                            Ok
+                        </button>
+                    ) : null}
                 </div>
             </div>
         </div>
