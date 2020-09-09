@@ -50,6 +50,8 @@ const Popup = props => {
     const customTitleStyle = props.titleStyle || {}
     const customBackdropStyle = props.backdropStyle || {}
     const customPopupStyle = props.popupStyle || {}
+    const customBodyStyle = props.bodyStyle || {}
+    const customButtonLineStyle = props.buttonLineStyle || {}
     return (
         <div>
             <div
@@ -58,8 +60,8 @@ const Popup = props => {
             />
             <div style={{ ...style.popup(props.zIndex), ...customPopupStyle }}>
                 <div style={{ ...style.title, ...customTitleStyle }}>{props.title}</div>
-                <div style={style.body}>{props.children}</div>
-                <div style={style.buttons}>
+                <div style={{ ...style.body, ...customBodyStyle }}>{props.children}</div>
+                <div style={{ ...style.buttons, ...customButtonLineStyle }}>
                     {/* delete dialog */}
                     {props.yes != null && props.no != null
                         ? [
