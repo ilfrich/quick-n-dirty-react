@@ -3,6 +3,36 @@
  *
  *
  */
+const baseButton = {
+    borderRadius: "0px",
+    padding: "6px 10px",
+    minWidth: "120px",
+    borderColor: "#006",
+    background: "#004",
+    fontSize: "14px",
+    color: "#eee",
+    cursor: "pointer",
+    outline: "none",
+    fontWeight: "600",
+}
+
+const baseTextInput = {
+    fontSize: "14px",
+    lineHeight: "1.2",
+    color: "#555",
+    backgroundColor: "#fff",
+    borderLeft: "0px",
+    borderRight: "0px",
+    borderTop: "0px",
+    borderBottom: "1px solid #666666",
+    borderRadius: "0px",
+    outline: "none",
+    display: "block",
+    width: "calc(100% - 12px)",
+    height: "31px",
+    padding: "0px 6px",
+}
+
 export default {
     // layout related
     clearFix: {
@@ -166,44 +196,29 @@ export default {
         fontSize: "14px",
         textDecoration: "underline",
     },
-    textInput: {
-        fontSize: "14px",
-        lineHeight: "1.2",
-        color: "#555",
-        backgroundColor: "#fff",
-        borderLeft: "0px",
-        borderRight: "0px",
-        borderTop: "0px",
-        borderBottom: "1px solid #666666",
-        borderRadius: "0px",
-        outline: "none",
-        display: "block",
-        width: "calc(100% - 12px)",
-        height: "31px",
-        padding: "0px 6px",
+    textInput: baseTextInput,
+    dropdown: {
+        ...baseTextInput,
+        height: "32px",
     },
-    button: {
-        borderRadius: "0px",
-        padding: "6px 10px",
-        minWidth: "120px",
-        borderColor: "#006",
-        background: "#004",
-        fontSize: "14px",
-        color: "#eee",
-        cursor: "pointer",
-        outline: "none",
-        fontWeight: "600",
-    },
+    button: baseButton,
     inverseButton: {
-        borderRadius: "0px",
+        ...baseButton,
         padding: "6px 20px",
-        minWidth: "120px",
         borderColor: "#fff",
         color: "#004",
-        fontSize: "14px",
         backgroundColor: "#eee",
-        cursor: "pointer",
-        outline: "none",
+        fontWeight: "400",
+    },
+    buttonDisabled: {
+        ...baseButton,
+        background: "#79818f",
+        cursor: "not-allowed",
+    },
+    buttonPending: {
+        ...baseButton,
+        background: "#79818f",
+        cursor: "wait",
     },
     formLine: {
         textAlign: "left",
@@ -219,19 +234,5 @@ export default {
     // other
     clickable: {
         cursor: "pointer",
-    },
-    buttonDisabled: {
-        ...this.button,
-        background: "#79818f",
-        cursor: "not-allowed",
-    },
-    buttonPending: {
-        ...this.button,
-        background: "#79818f",
-        cursor: "wait",
-    },
-    dropdown: {
-        ...this.dropdown,
-        height: "32px",
     },
 }
