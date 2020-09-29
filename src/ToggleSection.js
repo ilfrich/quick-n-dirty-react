@@ -40,16 +40,23 @@ class ToggleSection extends React.Component {
     }
 
     render() {
+        const fontStyle = this.props.fontStyle || {}
         return (
             <div>
                 <div>
                     <span onClick={this.toggle}>
                         {this.state.show ? (
-                            <span style={style.arrow}>&#x25BC;</span>
+                            <span style={{ ...style.arrow, ...fontStyle }}>&#x25BC;</span>
                         ) : (
-                            <span style={style.arrow}>&#x25B6;</span>
+                            <span style={{ ...style.arrow, ...fontStyle }}>&#x25B6;</span>
                         )}
-                        <span style={style.text}>{`${this.state.show ? "Hide" : "Show"} ${this.props.label}`}</span>
+                        {this.props.prefix !== false ? (
+                            <span style={{ ...style.text, ...fontStyle }}>{`${this.state.show ? "Hide" : "Show"} ${
+                                this.props.label
+                            }`}</span>
+                        ) : (
+                            <span style={{ ...style.text, ...fontStyle }}>{this.props.label}</span>
+                        )}
                     </span>
                 </div>
                 {this.state.show ? <div>{this.props.children}</div> : null}

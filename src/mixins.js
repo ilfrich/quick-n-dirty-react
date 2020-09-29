@@ -3,7 +3,7 @@
  *
  *
  */
-const mixins = {
+export default {
     // layout related
     clearFix: {
         clear: "both",
@@ -20,12 +20,10 @@ const mixins = {
     center: {
         textAlign: "center",
     },
-    vSpacer(height) {
-        return {
-            height: `${height}px`,
-            display: "block",
-        }
-    },
+    vSpacer: height => ({
+        height: `${height}px`,
+        display: "block",
+    }),
     indent: px => ({
         paddingLeft: `${px}px`,
     }),
@@ -222,18 +220,18 @@ const mixins = {
     clickable: {
         cursor: "pointer",
     },
+    buttonDisabled: {
+        ...this.button,
+        background: "#79818f",
+        cursor: "not-allowed",
+    },
+    buttonPending: {
+        ...this.button,
+        background: "#79818f",
+        cursor: "wait",
+    },
+    dropdown: {
+        ...this.dropdown,
+        height: "32px",
+    },
 }
-
-// additional buttons
-mixins.buttonDisabled = {
-    ...mixins.button,
-    background: "#79818f",
-    cursor: "not-allowed",
-}
-mixins.buttonPending = {
-    ...mixins.button,
-    background: "#79818f",
-    cursor: "wait",
-}
-
-export default mixins

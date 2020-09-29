@@ -6,11 +6,13 @@ Little library of React components and utilities for frontend development
 npm install --save quick-n-dirty-react
 ```
 
-1. [DateRangeSelect](#daterangeselect)
-2. [PercentageBar](#percentagebar)
-3. [Popup](#popup)
-4. [NotificationBar](#notificationbar)
-5. [CSS Mixins](#css-mixins)
+1. [Components](#components)
+    1. [DateRangeSelect](#daterangeselect)
+    2. [PercentageBar](#percentagebar)
+    3. [Popup](#popup)
+    4. [NotificationBar](#notificationbar)
+    5. [ToggleSection](#togglesection)
+2. [CSS Mixins](#css-mixins)
 
 ## Components
 
@@ -207,12 +209,61 @@ class MyComponent extends React.Component {
 - `position` - default `bottom` - where to display the message (`top`, `bottom`, `left` (top-left), and `right` 
  (top right))
 
+### `ToggleSection`
+
+Creates a toggle for the children element of this element. It will render an arrow right or down and maintain its own
+ state for the visibility of the children.  
+
+Usage:
+
+```javascript
+import React from "react"
+import { ToggleSection } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    render() {
+        return (
+            <div>
+                <ToggleSection label="Options">
+                    <div>Option 1: abc</div>
+                    <div>Option 2: def</div>
+                </ToggleSection>
+            </div>
+        )
+    }
+}
+```
+
+This will display:
+
+```
+> Show Options
+```
+
+When clicked on, this will expand to:
+
+```
+v Hide options
+Option 1: abc
+Option 2: def
+```
+
+**Properties** of `ToggleSection`:
+
+- `show` - default `false` - the initial state of the component (show/hide the children)
+- `label` - default `""` - the label to display
+- `prefix` - default `true` - whether to show the "Show" / "Hide" text in front of the label
+- `fontStyle` - default `{}` - provide additional styling override for all text elements (arrows and text)
+- `update` - default `null` - an event handler for the state update on toggle. Will pass the updated state (`true` or 
+ `false`) as parameter.
+
 ## CSS Mixins
 
 **Form related:**
 
 - `label` - used for `<label>` tags to provide some form label above the input
 - `textInput` - used for `<input type="text|number|date" /> to display an elegant text input
+- `dropdown` - equivalent to `textInput`, but for `<select>`
 - `formLine` - basic padding and text align short cut
 - `buttonLine` - line with some spacing for button below a form
 - `button` - better than default HTML button (padding, border, background)
