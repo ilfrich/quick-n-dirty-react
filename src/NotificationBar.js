@@ -61,12 +61,19 @@ class NotificationBar extends React.Component {
         this.state = {
             messages: {},
         }
+        this.timers = {}
         this.error = this.error.bind(this)
         this.info = this.info.bind(this)
         this.success = this.success.bind(this)
         this.getPosition = this.getPosition.bind(this)
         this.popMessage = this.popMessage.bind(this)
         this.addMessage = this.addMessage.bind(this)
+    }
+
+    componentWillUnmount() {
+        Object.keys(this.timers).forEach(timerKey => {
+            clearTimeout(this.timers[timerKey])
+        })
     }
 
     getPosition() {
@@ -105,8 +112,9 @@ class NotificationBar extends React.Component {
             }
         })
         // clean up message
-        setTimeout(() => {
+        this.timers[randomId] = setTimeout(() => {
             this.popMessage(randomId)
+            delete this.timers[randomId]
         }, timeout)
     }
 

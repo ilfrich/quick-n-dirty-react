@@ -1,6 +1,6 @@
 {
   "name": "quick-n-dirty-react",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Basic re-usable React components and useful CSS mixins",
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-dir ./dist",
