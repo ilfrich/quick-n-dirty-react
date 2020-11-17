@@ -25,7 +25,7 @@
   "homepage": "https://github.com/ilfrich/quick-n-dirty-react#readme",
   "dependencies": {
     "moment": "^2.29.0",
-    "quick-n-dirty-utils": "0.0.3",
+    "quick-n-dirty-utils": "^0.0.5",
     "react": "^16.13.1"
   },
   "devDependencies": {
