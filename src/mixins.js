@@ -184,6 +184,13 @@ export default {
         background: "#fff",
         color: "#333",
     },
+    listHeader: {
+        fontSize: "12px",
+        fontWeight: "600",
+        borderBottom: "1px solid #333",
+        padding: "8px",
+        background: "#ccc",
+    },
 
     // form related
     label: {
@@ -200,6 +207,11 @@ export default {
     dropdown: {
         ...baseTextInput,
         height: "32px",
+    },
+    textarea: {
+        width: "100%",
+        fontSize: "14px",
+        fontFamily: "Arial",
     },
     button: baseButton,
     inverseButton: {
