@@ -12,6 +12,7 @@ npm install --save quick-n-dirty-react
     3. [Popup](#popup)
     4. [NotificationBar](#notificationbar)
     5. [ToggleSection](#togglesection)
+    6. [SuggestionTextField](#suggestiontextfield)
 2. [CSS Mixins](#css-mixins)
 
 ## Components
@@ -256,6 +257,76 @@ Option 2: def
 - `fontStyle` - default `{}` - provide additional styling override for all text elements (arrows and text)
 - `update` - default `null` - an event handler for the state update on toggle. Will pass the updated state (`true` or 
  `false`) as parameter.
+
+### `SuggestionTextField`
+
+Create an `<input type="text" />` with the ability to run a suggestion search on a pre-defined 
+ list of strings, render them as suggestions and allow the user to select an option from the
+ suggestions.
+
+The component will be rendered at full-width within the encapsulating component/div. If the 
+ input's style is not `width: 100%`, then the suggestion list will most likely exceed the
+ input's length and look weird. Always wrap this component within a `<div>` with the width
+ you've specified for the input (if you decide to override the default style).
+
+The value of the input can be retrieved at any time using the `.getValue()` on a reference to 
+ the component.
+
+Usage:
+
+```javascript
+import React from "react"
+import { SuggestionTextField } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    save() {
+        // retrieve the current input field value
+        const currentValue = this.field.getValue()
+    }
+    
+    render() {
+        return (
+            <div style={{ width: "400px" }}>
+                <SuggestionTextField 
+                    ref={el => { this.field = el }}
+                    items={["Germany", "France", "Spain", "Italy"]}
+                    onSelect={(val) => { console.log("Selected:", val) }}
+                />
+                <button onClick={this.save}>Save</button>
+            </div>
+        )
+    }
+}
+```
+
+**Properties** of `SuggestionTextField`
+
+- `defaultValue` - the input's initial value.
+- `items` - a list of suggestions (have to be strings) that will be matched against the user's
+ input.
+- `minLength` - default `2` - defines the minimum lenght a search term has to have, before
+ suggestions will be shown.
+- `maxSuggestions` - default `8` - the maximum number of items shown as suggestions.
+- `matchCaseSensitive` - default `false` - whether the user input is matched using case-sensitive
+ matching. By default all strings will be converted to lower-case to match them against the items.
+- `zIndex` - default `5` - the z-index of the suggestion list. Should be higher than the parent
+ container rendering the `SuggestionTextField`
+- `inputStyle` - default `mixins.textInput` - the style used for the text field. By default the 
+ quick-n-dirty-react mixin for text inputs will be used.
+- `onChange(ev)` - default `null` - event handler that will be called with the change event 
+ whenever the user changes the input of the text field. Will not be called, when the user selects
+ a suggestion.
+- `onSelect(value)` - default `null` - callback that will be called with the selected option when 
+ the user selects a suggestion.
+- `onKeyPress(ev)` - default `null` - event handler that will be called, when the user presses a 
+ key while the text field is focused.
+
+**Methods** of `SuggestionTextField`
+
+- `getValue()` - retrieves the currently active input value (similar to regular input ref's
+ `.value`).
+- `setValue(newValue)` - provides a new value for the input field and resets any visible
+ suggestions.
 
 ## CSS Mixins
 

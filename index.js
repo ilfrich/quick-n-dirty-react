@@ -5,4 +5,5 @@ module.exports = {
     mixins: require("./dist/mixins").default,
     NotificationBar: require("./dist/NotificationBar").default,
     ToggleSection: require("./dist/ToggleSection").default,
+    SuggestionTextField: require("./dist/SuggestionTextField").default,
 }
