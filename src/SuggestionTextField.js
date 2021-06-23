@@ -151,6 +151,7 @@ class SuggestionTextField extends React.Component {
                     defaultValue={this.props.defaultValue || ""}
                     onChange={this.onChange}
                     ref={el => { this.field = el }}
+                    disabled={this.props.disabled === true}
                 />
                 {this.state.choices != null && this.state.choices.length > 0 ? (
                     <div style={style.dropdown(this.props.zIndex || 5)}>

@@ -26,7 +26,7 @@ class DateRangeSelect extends React.Component {
         this.changeTo = this.changeTo.bind(this)
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
+    componentDidUpdate(prevProps) {
         // allows manipulation from the outside
         if (prevProps.defaultFrom !== this.props.defaultFrom) {
             this.from.value = util.formatDate(this.props.defaultFrom)
@@ -55,7 +55,7 @@ class DateRangeSelect extends React.Component {
                         this.from = e
                     }}
                     style={mixins.textInput}
-                    defaultValue={util.formatDate(this.props.defaultFrom || moment())}
+                    defaultValue={this.props.defaultFrom ? util.formatDate(this.props.defaultFrom) : ""}
                     onChange={this.changeFrom}
                 />
                 <input
@@ -64,7 +64,7 @@ class DateRangeSelect extends React.Component {
                         this.to = e
                     }}
                     style={mixins.textInput}
-                    defaultValue={util.formatDate(this.props.defaultTo || moment())}
+                    defaultValue={this.props.defaultTo ? util.formatDate(this.props.defaultTo) : ""}
                     onChange={this.changeTo}
                 />
             </div>

@@ -309,6 +309,7 @@ class MyComponent extends React.Component {
 - `maxSuggestions` - default `8` - the maximum number of items shown as suggestions.
 - `matchCaseSensitive` - default `false` - whether the user input is matched using case-sensitive
  matching. By default all strings will be converted to lower-case to match them against the items.
+- `disabled` - default `false` - whether to disable the input field
 - `zIndex` - default `5` - the z-index of the suggestion list. Should be higher than the parent
  container rendering the `SuggestionTextField`
 - `inputStyle` - default `mixins.textInput` - the style used for the text field. By default the 
