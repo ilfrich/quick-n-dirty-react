@@ -13,6 +13,9 @@ npm install --save quick-n-dirty-react
     4. [NotificationBar](#notificationbar)
     5. [ToggleSection](#togglesection)
     6. [SuggestionTextField](#suggestiontextfield)
+    7. [BatchProgressBar](#batchprogressbar)
+    8. [PaginationBar](#paginationbar)
+    9. [ListSorting](#listsorting)
 2. [CSS Mixins](#css-mixins)
 
 ## Components
@@ -200,9 +203,12 @@ class MyComponent extends React.Component {
 
 **Methods** of `NotificationBar`:
 
-- `error(message)` - display a message on red background (something went wrong)
-- `info(message)` - display a message on yellow background (e.g. a warning or info message)
-- `success(message)` - display a message on green background (e.g. confirmation)
+- `error(message, customTimeout = null)` - display a message on red background (something went wrong)
+- `info(message, customTimeout = null)` - display a message on yellow background (e.g. a warning or info message)
+- `success(message, customTimeout = null)` - display a message on green background (e.g. confirmation)
+
+The `customTimeout` can override the default `timeout` property for a given message. By default it's null and will
+ fall back to the default.
 
 **Properties** of `NotificationBar`:
 
@@ -328,6 +334,173 @@ class MyComponent extends React.Component {
  `.value`).
 - `setValue(newValue)` - provides a new value for the input field and resets any visible
  suggestions.
+
+### `BatchProgressBar`
+
+Renders a progress bar full screen width at the bottom of the screen. There's a 200px wide section
+ on the left side of the bar for a label and the rest is a progress bar.
+
+If `total` or `current` are not valid numbers or `total` is 0, the bar will not be rendered.
+
+Usage:
+
+```javascript
+import React from "react"
+import { BatchProgressBar } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            current: 0,
+        }
+    }
+
+    componentDidMount() {
+        const inv = setInterval(() => {
+            // update every 0.5s and increment the current counter
+            this.setState(oldState => ({ current: oldState.current + 1 }), () => {
+                if (this.state.current === 100) {
+                    // once we reach total, clear the interval
+                    clearInterval(inv)
+                }
+            })
+        }, 500)
+    }
+
+    render() {
+        return (
+            <BatchProgressBar current={this.state.current} total={100} label="Loading Items" />
+        )
+    }
+}
+```
+
+**Properties** of `BatchProgressBar`
+
+- `label` - the label to display on the left side of the bar
+- `total` - the limit (number) of the progress bar
+- `current` - the current (number) of the progress
+
+
+### `PaginationBar`
+
+Renders a pagination bar underneath a paginated table. The component relies on the concept of a `page` (starting 
+ from 0) and `pageSize`, which indicates the number of items per page. Additionally the `total` number of items
+ in the list needs to be known.
+
+Usage:
+
+```javascript
+import React from "react"
+import { PaginationBar } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            // initial paging parameters
+            paging: {
+                page: 0,
+                pageSize: 15,
+            },
+        }
+        // event handler to change paging
+        this.setPaging = this.setPaging.bind(this)
+    }
+
+    setPaging(newPage, newPageSize) {
+        this.setState({
+            paging: {
+                page: newPage,
+                pageSize: newPageSize,
+            },
+        })
+    }
+
+    render() {
+        return (
+            <div>
+                <table>
+                    ...
+                </table>
+                <PaginationBar 
+                    width={580} 
+                    total={100}
+                    setPaging={this.setPaging} 
+                    page={this.state.paging.page} 
+                    pageSize={this.state.paging.pageSize}
+                    pageSizes={[15, 30, 50]}
+                />
+            </div>
+        )
+    }
+}
+```
+
+**Properties** of `PaginationBar`
+
+- `total` - the total number of items in the list
+- `page` - the current page to show (starts with 0)
+- `pageSize` - the currently configured page size
+- `width` - default: `100%` - the width of the pagination bar in pixels
+- `pageSizes` - default: `[25, 50, 100]` - a list of available page sizes
+- `setPaging` - the event handler to call when the user changes the page or page size, has 
+ 2 parameters, `page` and `pageSize`
+
+### `ListSorting`
+
+Renders a sorting symbol next to a list header. When the sorting is active, it will 
+ render and up-arrow or down-arrow depending on the current sorting direction. 
+
+This component relies on a sorting object, containing a `key` property (which defines
+ the attribute to sort by) and a `direction` property, which defines the sort direction
+ (either `"asc"` or `"desc"`).
+
+Usage:
+
+```javascript
+import React from "react"
+import { ListSorting } from "quick-n-dirty-react"
+import util from "quick-n-dirty-utils"
+
+class MyComponent extends React.Component { 
+    constructor(props) {
+        super(props)
+        this.state = {
+            // provide initial sorting
+            sorting: {
+                key: "date",
+                direction: "desc",
+            }
+        }
+    }
+
+    setSorting(sortKey) {
+        // utilising quick-n-dirty-utils sort feature
+        this.setState(oldState => util.updateSorting(oldState, sortKey)
+    }
+
+    render() {
+        return (
+            <table>
+                <thead>
+                    <th>
+                        Name
+                        <ListSorting current={this.state.sorting} sortKey="name" change={this.setSorting} />
+                    </th>
+                    <th>
+                        Date
+                        <ListSorting current={this.state.sorting} sortKey="date" change={this.setSorting} />
+                    </th>
+                </thead>
+                ...
+            </table>
+        )
+    }
+}
+```
+
 
 ## CSS Mixins
 

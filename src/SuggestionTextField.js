@@ -4,7 +4,7 @@ import mixins from "./mixins"
 const style = {
     dropdown: zIndex => ({
         position: "absolute",
-        zIndex: zIndex,
+        zIndex,
         borderLeft: "1px solid #aaa",
         borderRight: "1px solid #aaa",
         width: "100%",
@@ -17,11 +17,10 @@ const style = {
     }),
 }
 
-
 /**
- * Component to render a text field that will provide a drop down to select from a list of matching selections. 
+ * Component to render a text field that will provide a drop down to select from a list of matching selections.
  * Matched items will be determined as the user types.
- * 
+ *
  * Properties:
  * - defaultValue (null) - initial value of the text field
  * - inputStyle (null) - a custom style for the text input
@@ -35,7 +34,6 @@ const style = {
  * - zIndex (5) - the zIndex of the drop down
  */
 class SuggestionTextField extends React.Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -46,6 +44,40 @@ class SuggestionTextField extends React.Component {
         this.onKeyPress = this.onKeyPress.bind(this)
         this.onChange = this.onChange.bind(this)
         this.select = this.select.bind(this)
+    }
+
+    /**
+     * Event handler whenever a key is pressed (keyUp event). Will evaluate, if suggestions should be shown and,
+     * if provided, call an event handler passed in as property
+     * @param {Event} ev - the keyUp event
+     * @returns always true
+     */
+    onKeyPress(ev) {
+        const searchTerm = ev.target.value
+        if (searchTerm.length < (this.props.minLength || 2)) {
+            this.setState({
+                choices: null,
+                hover: null,
+            })
+            return true
+        }
+
+        this.setState({ choices: this.getMatchingItems(searchTerm).slice(0, this.props.maxSuggestions || 8) })
+
+        if (this.props.onKeyPress != null) {
+            this.props.onKeyPress(ev)
+        }
+        return true
+    }
+
+    /**
+     * Will call the onChange event handler, if one is passed in as property.
+     * @param {Event} ev - the change event on the input
+     */
+    onChange(ev) {
+        if (this.props.onChange != null) {
+            this.props.onChange(ev)
+        }
     }
 
     /**
@@ -82,44 +114,12 @@ class SuggestionTextField extends React.Component {
 
     /**
      * When the user moves the mouse over suggestions, this will handle the currently highlighted selection.
-     * @param {String} hover 
+     * @param {String} hover - the new hover state, the value from the list of selections or null
      * @returns an event handler
      */
     setHover(hover) {
         return () => {
             this.setState({ hover })
-        }
-    }
-
-    /**
-     * Event handler whenever a key is pressed (keyUp event). Will evaluate, if suggestions should be shown and, 
-     * if provided, call an event handler passed in as property
-     * @param {Event} ev - the keyUp event
-     */
-    onKeyPress(ev) {
-        const searchTerm = ev.target.value
-        if (searchTerm.length < (this.props.minLength || 2)) {
-            this.setState({ 
-                choices: null,
-                hover: null,
-            })
-            return true
-        }
-
-        this.setState({ choices: this.getMatchingItems(searchTerm).slice(0, this.props.maxSuggestions || 8) })
-
-        if (this.props.onKeyPress != null) {
-            this.props.onKeyPress(ev)
-        }
-    }
-
-    /**
-     * Will call the onChange event handler, if one is passed in as property.
-     * @param {Event} ev - the change event on the input
-     */
-    onChange(ev) {
-        if (this.props.onChange != null) {
-            this.props.onChange(ev)
         }
     }
 
@@ -131,7 +131,7 @@ class SuggestionTextField extends React.Component {
     select(val) {
         return () => {
             this.field.value = val
-            this.setState({ 
+            this.setState({
                 choices: null,
                 hover: null,
             })
@@ -144,19 +144,30 @@ class SuggestionTextField extends React.Component {
     render() {
         return (
             <div style={mixins.relative}>
-                <input 
-                    type="text" 
-                    style={this.props.inputStyle || mixins.textInput} 
-                    onKeyUp={this.onKeyPress} 
+                <input
+                    type="text"
+                    style={this.props.inputStyle || mixins.textInput}
+                    onKeyUp={this.onKeyPress}
                     defaultValue={this.props.defaultValue || ""}
                     onChange={this.onChange}
-                    ref={el => { this.field = el }}
+                    ref={el => {
+                        this.field = el
+                    }}
                     disabled={this.props.disabled === true}
                 />
                 {this.state.choices != null && this.state.choices.length > 0 ? (
                     <div style={style.dropdown(this.props.zIndex || 5)}>
                         {this.state.choices.map(choice => (
-                            <div style={style.choice(this.state.hover === choice)} onClick={this.select(choice)} key={choice} onMouseEnter={this.setHover(choice)} onMouseOut={this.setHover(null)}>{choice}</div>
+                            <div
+                                style={style.choice(this.state.hover === choice)}
+                                onClick={this.select(choice)}
+                                key={choice}
+                                onMouseEnter={this.setHover(choice)}
+                                onMouseOut={this.setHover(null)}
+                                onBlur={this.setHover(null)}
+                            >
+                                {choice}
+                            </div>
                         ))}
                     </div>
                 ) : null}

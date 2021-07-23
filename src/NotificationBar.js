@@ -84,20 +84,23 @@ class NotificationBar extends React.Component {
         return "bottom"
     }
 
-    error(message) {
-        this.addMessage(message, messageTypes.error)
+    error(message, customTimeout = null) {
+        this.addMessage(message, messageTypes.error, customTimeout)
     }
 
-    info(message) {
-        this.addMessage(message, messageTypes.info)
+    info(message, customTimeout = null) {
+        this.addMessage(message, messageTypes.info, customTimeout)
     }
 
-    success(message) {
-        this.addMessage(message, messageTypes.success)
+    success(message, customTimeout = null) {
+        this.addMessage(message, messageTypes.success, customTimeout)
     }
 
-    addMessage(message, style) {
-        const timeout = this.props.timeout || 3000 // 3 seconds default
+    addMessage(message, style, customTimeout = null) {
+        let timeout = customTimeout
+        if (timeout == null) {
+            timeout = this.props.timeout || 3000 // 3 seconds default
+        }
         const randomId = getRandomId()
         this.setState(oldState => {
             const messages = { ...oldState.messages }

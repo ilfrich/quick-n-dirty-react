@@ -184,12 +184,26 @@ export default {
         background: "#fff",
         color: "#333",
     },
+    // idx is the row index
+    stripedTable: (idx, oddColor = "#f3f3f3") => ({
+        display: "grid",
+        background: idx % 2 === 1 ? oddColor : "none",
+    }),
     listHeader: {
         fontSize: "12px",
         fontWeight: "600",
         borderBottom: "1px solid #333",
         padding: "8px",
         background: "#ccc",
+    },
+    baseBadge: {
+        cursor: "pointer",
+        display: "inline-block",
+        marginBottom: "5px",
+        marginRight: "5px",
+        border: "1px solid none",
+        borderRadius: "4px",
+        padding: "4px 6px",
     },
 
     // form related
@@ -206,6 +220,8 @@ export default {
     textInput: baseTextInput,
     dropdown: {
         ...baseTextInput,
+        // the padding doesn't get included in the width for selects
+        width: "100%",
         height: "32px",
     },
     textarea: {
