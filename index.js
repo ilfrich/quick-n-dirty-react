@@ -6,4 +6,7 @@ module.exports = {
     NotificationBar: require("./dist/NotificationBar").default,
     ToggleSection: require("./dist/ToggleSection").default,
     SuggestionTextField: require("./dist/SuggestionTextField").default,
+    BatchProgressBar: require("./dist/BatchProgressBar").default,
+    ListSorting: require("./dist/ListSorting").default,
+    PaginationBar: require("./dist/PaginationBar").default,
 }
