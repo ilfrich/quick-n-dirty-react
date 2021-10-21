@@ -9,4 +9,5 @@ module.exports = {
     BatchProgressBar: require("./dist/BatchProgressBar").default,
     ListSorting: require("./dist/ListSorting").default,
     PaginationBar: require("./dist/PaginationBar").default,
+    WindowEdgeToggle: require("./dist/WindowEdgeToggle").default,
 }

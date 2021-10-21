@@ -16,6 +16,7 @@ npm install --save quick-n-dirty-react
     7. [BatchProgressBar](#batchprogressbar)
     8. [PaginationBar](#paginationbar)
     9. [ListSorting](#listsorting)
+    10. [WindowEdgeToggle](#windowedgetoggle)
 2. [CSS Mixins](#css-mixins)
 
 ## Components
@@ -501,6 +502,71 @@ class MyComponent extends React.Component {
 }
 ```
 
+### `WindowEdgeToggle`
+
+This component will render an arrow on a side of the browser window (or container, if 
+ specified) and allow to expand / hide the children components.
+
+Usage:
+
+```javascript
+import React from "react"
+import { WindowEdgeToggle } from "quick-n-dirty-react"
+
+const MyComponent = props => (
+    <div>
+        <WindowEdgeToggle 
+            side="right" 
+            distance={50} 
+            margin={10} 
+            background="#cccccc" 
+            backgroundToggle="#000000" 
+            color="#ffffff"
+            initialShow
+        >
+            <div>Some content to render, when the Toggle is expanded</div>
+        </WindowEdgeToggle>
+    </div>
+)
+```
+
+This will render the toggle icon (an arrow / caret) on the right side of the browser window, 
+ 50 pixels from the top, 10 pixels from the right side of the browser window edge. The toggle 
+ will have a black background and the arrow will be white. Initially the toggle is expanded
+ and the content will be shown on grey (#cccccc) background.
+
+**Properties**
+
+- `side` - default `right` - one of `top`, `left`, `right`, `bottom` (an error is thrown if 
+ some invalid value is provided)
+- `distance` - default `0` - the number of pixels from the corner the toggle will be rendered.
+ For `top` and `left`, this determines the distance to the top-left corner, for `right` from 
+ the top-right corner and for `bottom` the distance to the bottom-left corner.
+- `margin` - default `0` - the number of pixels from the window boundaries the toggle will be 
+ rendered. If the default is provided, it will stick to the edge of the browser.
+- `absolute` - default `false` - a boolean flag that changes the position of the entire 
+ component from `fixed` to `absolute`, which allows positioning within another container. 
+ Ensure to add `position: "relative"` to the container in this case.
+- `padding` - default `15` - the number of pixels of padding (all directions) of the expanded
+ section to render the children.
+- `background` - default `#f3f3f3` - the background used for the expanded content, if not 
+ otherwise specified (`backgroundToggle`), this background will also be used for the toggle itself.
+- `backgroundToggle` - default `#f3f3f3` or value of `background` - an override for the background
+ color of the toggle.
+- `color` - default `#000000` - the font color of the arrow that expands/collapses the toggle.
+- `zIndex` - default `20` - the z-index CSS property for the entire component
+- `initialShow` - default `false` - whether to initially show the children components or not.
+- `onChangeShow` - default `null` - allows to provide an event handler, which informs the 
+ parent component embedding the `WindowEdgeToggle` to be notified, when the toggle is changed.
+ The function will be called with the new state of the toggle (`true` or `false`) depending on
+ whether the content is visible or not.
+
+**Methods**
+
+- `toggle(value)` - changes the current visibility of the collapsable content, where a value of
+ `true` will make the content visible, and `false` will hide the children. If no `value` is
+ provided, this will simply change the state to the opposite state (`true` -> `false` and vice-
+ versa).
 
 ## CSS Mixins
 
