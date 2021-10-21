@@ -156,7 +156,7 @@ class WindowEdgeToggle extends React.Component {
     toggle(newValue = null) {
         this.setState(oldState => ({
             ...oldState,
-            show: newValue == null ? !oldState.show : newValue, 
+            show: newValue !== true && newValue !== false ? !oldState.show : newValue,
         }), () => {
             // notify parent if required
             if (this.props.onChangeShow != null) {
