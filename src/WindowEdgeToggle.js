@@ -168,7 +168,7 @@ class WindowEdgeToggle extends React.Component {
     render() {
         return (
             <div style={this.getContainerCss()}>
-                <div style={this.getToggleStyle()} onClick={this.onToggleShow}>
+                <div style={this.getToggleStyle()} onClick={this.toggle}>
                     <div style={this.getToggleArrowStyle()}>
                         {this.getArrowCharacter()}
                     </div>                    
