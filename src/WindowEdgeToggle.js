@@ -54,10 +54,10 @@ class WindowEdgeToggle extends React.Component {
         const effectiveSide = this.state.show ? side : opposite[side]
 
         const lookup = {
-            top: <span>&#129169;</span>,
-            left: <span>&#129168;</span>,
-            right: <span>&#129170;</span>,
-            bottom: <span>&#129171;</span>,
+            top: <span>&#9652;</span>,
+            left: <span>&#9666;</span>,
+            right: <span>&#9656;</span>,
+            bottom: <span>&#9662;</span>,
         }
         return lookup[effectiveSide]
     }
@@ -107,24 +107,11 @@ class WindowEdgeToggle extends React.Component {
         if (this.props.side === "right" || this.props.side === "left") {
             return null
         }
-        const style = {
+        return {
             position: "absolute",
             display: "inline-block",
             left: "10px",
         }
-
-        const opposite = {
-            top: "bottom",
-            bottom: "top",
-        }
-        const side = this.props.side || "right"
-        const effectiveSide = this.state.show ? side : opposite[side]
-        if (effectiveSide === "bottom") {
-            style.top = "10px"
-        } else {
-            style.bottom = "10px"
-        }
-        return style
     }
 
     getContainerCss() {
