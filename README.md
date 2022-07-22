@@ -71,6 +71,35 @@ class MyComponent extends React.Component {
 }
 ```
 
+Alternatively, you can also simply let the component run independently and fetch the values on demand:
+
+```jsx harmony
+import React from "react"
+import { DateRangeSelect } from "quick-n-dirty-react"
+
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.trigger = this.trigger.bind(this)
+    }
+
+    trigger() {
+        // returns 2 date objects (can be null, if no date has been selected)
+        const { from, to } = this.dateRange.getValues()
+    }
+
+    render() {
+        return (
+            <div>
+                <DateRangeSelect ref={el => { this.dateRange = el }} />
+                <button onClick={this.trigger} type="button">Fetch</button>
+            </div>
+        )
+    }
+}
+```
+
 ### `PercentageBar`
 
 A basic coloured percentage bar 

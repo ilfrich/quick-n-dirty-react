@@ -24,6 +24,7 @@ class DateRangeSelect extends React.Component {
         super(props)
         this.changeFrom = this.changeFrom.bind(this)
         this.changeTo = this.changeTo.bind(this)
+        this.getValues = this.getValues.bind(this)
     }
 
     componentDidUpdate(prevProps) {
@@ -36,12 +37,31 @@ class DateRangeSelect extends React.Component {
         }
     }
 
+    getValues() {
+        let from = null
+        let to = null
+        if (this.from.value !== "") {
+            from = moment(this.from.value)
+        }
+        if (this.to.value !== "") {
+            to = moment(this.to.value)
+        }
+        return {
+            from,
+            to,
+        }
+    }
+
     changeFrom() {
-        this.props.changeFrom(moment(this.from.value))
+        if (this.props.changeFrom != null) {
+            this.props.changeFrom(moment(this.from.value))
+        }
     }
 
     changeTo() {
-        this.props.changeTo(moment(this.to.value))
+        if (this.props.changeTo != null) {
+            this.props.changeTo(moment(this.to.value))
+        }
     }
 
     render() {

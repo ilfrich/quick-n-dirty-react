@@ -22,16 +22,17 @@ const globalStyle = {
 }
 
 class WindowEdgeToggle extends React.Component {
-
     constructor(props) {
         super(props)
 
         this.state = {
-            show: props.initialShow === true
+            show: props.initialShow === true,
         }
 
         if (props.side != null && !["right", "left", "top", "bottom"].includes(props.side)) {
-            throw Error(`Invalid property 'side' provided: ${props.side}. Must be one of 'right', 'top', 'left', 'bottom'`)
+            throw Error(
+                `Invalid property 'side' provided: ${props.side}. Must be one of 'right', 'top', 'left', 'bottom'`
+            )
         }
 
         this.toggle = this.toggle.bind(this)
@@ -89,7 +90,8 @@ class WindowEdgeToggle extends React.Component {
     }
 
     getToggleStyle() {
-        const background = this.props.backgroundToggle != null ? this.props.backgroundToggle : this.props.background || "#f3f3f3"
+        const background =
+            this.props.backgroundToggle != null ? this.props.backgroundToggle : this.props.background || "#f3f3f3"
         return {
             ...mixins.clickable,
             ...mixins.center,
@@ -99,7 +101,7 @@ class WindowEdgeToggle extends React.Component {
             background,
             width: "35px",
             height: "35px",
-            color: this.props.color || "#000"
+            color: this.props.color || "#000",
         }
     }
 
@@ -136,34 +138,33 @@ class WindowEdgeToggle extends React.Component {
         style[sides[1]] = `${distance}px`
 
         style.zIndex = this.props.zIndex || 20
-        
+
         return style
     }
 
     toggle(newValue = null) {
-        this.setState(oldState => ({
-            ...oldState,
-            show: newValue !== true && newValue !== false ? !oldState.show : newValue,
-        }), () => {
-            // notify parent if required
-            if (this.props.onChangeShow != null) {
-                this.props.onChangeShow(this.state.show)
+        this.setState(
+            oldState => ({
+                ...oldState,
+                show: newValue !== true && newValue !== false ? !oldState.show : newValue,
+            }),
+            () => {
+                // notify parent if required
+                if (this.props.onChangeShow != null) {
+                    this.props.onChangeShow(this.state.show)
+                }
             }
-        })
+        )
     }
 
     render() {
         return (
             <div style={this.getContainerCss()}>
                 <div style={this.getToggleStyle()} onClick={this.toggle}>
-                    <div style={this.getToggleArrowStyle()}>
-                        {this.getArrowCharacter()}
-                    </div>                    
+                    <div style={this.getToggleArrowStyle()}>{this.getArrowCharacter()}</div>
                 </div>
                 <div style={globalStyle.contentWrapper}>
-                    <div style={this.getContentStyle()}>
-                        {this.props.children}
-                    </div>                
+                    <div style={this.getContentStyle()}>{this.props.children}</div>
                 </div>
             </div>
         )
