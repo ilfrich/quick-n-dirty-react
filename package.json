@@ -1,6 +1,6 @@
 {
   "name": "quick-n-dirty-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Basic re-usable React components and useful CSS mixins",
   "scripts": {
     "build": "./node_modules/.bin/babel src --out-dir ./dist",
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/ilfrich/quick-n-dirty-react#readme",
   "dependencies": {
-    "moment": "^2.29.0",
+    "luxon": "^3.0.4",
     "quick-n-dirty-utils": "^1.0.0",
     "react": "^16.13.1"
   },

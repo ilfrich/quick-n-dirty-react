@@ -29,7 +29,7 @@ A combined component to provide a "From" and "To" date for a date range.
 
 ```jsx harmony
 import React from "react"
-import moment from "moment"
+import { DateTime } from "luxon"
 import { DateRangeSelect } from "quick-n-dirty-react"
 
 class MyComponent extends React.Component {
@@ -37,8 +37,8 @@ class MyComponent extends React.Component {
         super(props)
         // init your own components proxy for the current values
         this.state = {
-            fromDate: moment(),
-            toDate: moment(),
+            fromDate: DateTime.now(),
+            toDate: DateTime.now(),
         }
         // register event handlers
         this.setFrom = this.setFrom.bind(this)

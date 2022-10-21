@@ -1,5 +1,5 @@
 import React from "react"
-import moment from "moment"
+import { DateTime } from "luxon"
 import { util } from "quick-n-dirty-utils"
 import mixins from "./mixins"
 
@@ -41,10 +41,10 @@ class DateRangeSelect extends React.Component {
         let from = null
         let to = null
         if (this.from.value !== "") {
-            from = moment(this.from.value)
+            from = DateTime.fromSQL(this.from.value)
         }
         if (this.to.value !== "") {
-            to = moment(this.to.value)
+            to = DateTime.fromSQL(this.to.value)
         }
         return {
             from,
@@ -54,13 +54,13 @@ class DateRangeSelect extends React.Component {
 
     changeFrom() {
         if (this.props.changeFrom != null) {
-            this.props.changeFrom(moment(this.from.value))
+            this.props.changeFrom(DateTime.fromSQL(this.from.value))
         }
     }
 
     changeTo() {
         if (this.props.changeTo != null) {
-            this.props.changeTo(moment(this.to.value))
+            this.props.changeTo(DateTime.fromSQL(this.to.value))
         }
     }
 
