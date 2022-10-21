@@ -1,6 +1,6 @@
 import React from "react"
 import moment from "moment"
-import util from "quick-n-dirty-utils"
+import { util } from "quick-n-dirty-utils"
 import mixins from "./mixins"
 
 const style = {
