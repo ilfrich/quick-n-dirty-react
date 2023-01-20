@@ -15,6 +15,12 @@ const style = {
         background: hover ? "#ccc" : "#eee",
         padding: "4px",
     }),
+    dropdownArrow: {
+        position: "absolute",
+        right: "0px",
+        top: "0px",
+        padding: "5px",
+    },
 }
 
 /**
@@ -25,8 +31,6 @@ const style = {
  * - defaultValue (null) - initial value of the text field
  * - inputStyle (null) - a custom style for the text input
  * - items ([]) - a list of strings against which the search term will be matched
- * - maxSuggestions (8) - maximum number of suggestions to display
- * - minLength (2) - minimum length of the string before searching begins
  * - matchCaseSensitive (false) - whether to match case-sensitive
  * - onSelect (null) - event handler when the user selects a choice from the drop down
  * - onKeyPress (null) - event handler when the user presses a key
@@ -43,6 +47,7 @@ class SuggestionTextField extends React.Component {
 
         this.onKeyPress = this.onKeyPress.bind(this)
         this.onChange = this.onChange.bind(this)
+        this.expandAll = this.expandAll.bind(this)
         this.select = this.select.bind(this)
     }
 
@@ -54,7 +59,7 @@ class SuggestionTextField extends React.Component {
      */
     onKeyPress(ev) {
         const searchTerm = ev.target.value
-        if (searchTerm.length < (this.props.minLength || 2)) {
+        if (searchTerm.length === 0) {
             this.setState({
                 choices: null,
                 hover: null,
@@ -62,7 +67,7 @@ class SuggestionTextField extends React.Component {
             return true
         }
 
-        this.setState({ choices: this.getMatchingItems(searchTerm).slice(0, this.props.maxSuggestions || 8) })
+        this.setState({ choices: this.getMatchingItems(searchTerm) })
 
         if (this.props.onKeyPress != null) {
             this.props.onKeyPress(ev)
@@ -123,6 +128,21 @@ class SuggestionTextField extends React.Component {
         }
     }
 
+    expandAll() {
+        this.setState(oldState => { 
+            if (oldState.choices == null) {
+                return {
+                    ...oldState,
+                    choices: this.props.items
+                }
+            }
+            return {
+                ...oldState,
+                choices: null,
+            }
+        })
+    }
+
     /**
      * Event handler to be executed whenever the user selects an item from the drop-down list of suggestions.
      * @param {String} val - the selected value
@@ -155,6 +175,9 @@ class SuggestionTextField extends React.Component {
                     }}
                     disabled={this.props.disabled === true}
                 />
+                <div style={style.dropdownArrow} onClick={this.expandAll}>
+                    &#9662;
+                </div>
                 {this.state.choices != null && this.state.choices.length > 0 ? (
                     <div style={style.dropdown(this.props.zIndex || 5)}>
                         {this.state.choices.map(choice => (

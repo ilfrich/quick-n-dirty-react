@@ -10,4 +10,7 @@ module.exports = {
     ListSorting: require("./dist/ListSorting").default,
     PaginationBar: require("./dist/PaginationBar").default,
     WindowEdgeToggle: require("./dist/WindowEdgeToggle").default,
+    DeleteObject: require("./dist/DeleteObject").default,
+    ResolutionDetector: require("./dist/ResolutionDetector").default,
+    WindowResolution: require("./dist/WindowResolution").default,
 }

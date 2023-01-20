@@ -72,6 +72,15 @@ export default {
         overflow: "hidden",
         textOverflow: "ellipsis",
     },
+    gridColumns: (cols, colGap = 5, maxWidth = null) => ({
+        display: "grid",
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gridColumnGap: `${colGap}px`,
+        maxWidth: maxWidth != null ? `${maxWidth}px` : null,
+    }),
+    width: px => ({
+        width: `${px}px`,
+    }),
 
     // text related
     white: {
@@ -183,6 +192,11 @@ export default {
         padding: "30px",
         background: "#fff",
         color: "#333",
+    },
+    listIcon: {
+        cursor: "pointer",
+        margin: "0px 5px",
+        color: "#666",
     },
     // idx is the row index
     stripedTable: (idx, oddColor = "#f3f3f3") => ({

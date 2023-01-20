@@ -17,6 +17,9 @@ npm install --save quick-n-dirty-react
     8. [PaginationBar](#paginationbar)
     9. [ListSorting](#listsorting)
     10. [WindowEdgeToggle](#windowedgetoggle)
+    11. [DeleteObject](#deleteobject)
+    12. [Automatic Resolution Detection](#automatic-resolution-detection)
+    13. [BackdropContent](#backdropcontent)
 2. [CSS Mixins](#css-mixins)
 
 ## Components
@@ -202,6 +205,20 @@ const render = <Popup
                 </Popup>
 ```
 
+**A full list of styles to overwrite:**
+
+- `buttonStyle` - for the "OK" or "Yes" button
+- `cancelButtonStyle` - for the "Cancel" or "No" button
+- `titleStyle` - for the header of the popup
+- `backdropStyle` - custom grey/transparent backdrop  
+- `popupStyle` - for the container wrapping the visible area of the whole popup
+- `bodyStyle` - for the area containing the popup content (`props.children`)
+- `buttonLineStyle` - for the footer containing the buttons
+
+**Other properties**
+
+- `zIndex` - default 600 - the `z-index` of the backdrop and popup
+
 ### `NotificationBar`
 
 Embeds a container into any component that has a fixed position and will be invisible as long as no message is emitted 
@@ -340,9 +357,6 @@ class MyComponent extends React.Component {
 - `defaultValue` - the input's initial value.
 - `items` - a list of suggestions (have to be strings) that will be matched against the user's
  input.
-- `minLength` - default `2` - defines the minimum lenght a search term has to have, before
- suggestions will be shown.
-- `maxSuggestions` - default `8` - the maximum number of items shown as suggestions.
 - `matchCaseSensitive` - default `false` - whether the user input is matched using case-sensitive
  matching. By default all strings will be converted to lower-case to match them against the items.
 - `disabled` - default `false` - whether to disable the input field
@@ -597,6 +611,130 @@ This will render the toggle icon (an arrow / caret) on the right side of the bro
  provided, this will simply change the state to the opposite state (`true` -> `false` and vice-
  versa).
 
+### `DeleteObject`
+
+This abstract component is meant to be inherited for a listing component (or any component that 
+ wants to call a delete operation of a database object) and provides handling for asking for 
+ confirmation of the delete operation before calling it.
+
+The component inheriting `DeleteObject` will receive a new managed state (`deleteObject`) and a
+ method `setDeleteObject`, which can be called from the inheriting component. The inheriting 
+ component only requires a `delete` property being passed, which needs to be a function that 
+ executes the deletion.
+
+Usage:
+
+```javascript
+import React from "react"
+import { DeleteObject } from "quick-n-dirty-react"
+
+class LetterList extends DeleteObject {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            ...this.state,  // this is important! don't forget this, or the component might not work
+            someOther: "state",
+        }
+    }
+    render() {
+        return (
+            <div>
+                {props.items.map(item => (
+                    <div key={item} onClick={this.setDeleteObject(item)}>Delete {item}</div>
+                ))}
+                {this.state.deleteObject != null ? (
+                    this.renderDeletePopup("DeleteLetter", "Are you sure you want to delete this letter?", {   
+                        buttonStyle: { background: "#f00" },
+                    })
+                ) : null}
+            </div>
+        )
+    }
+}
+
+// this is the container that handles the data
+class Container extends React.Component {
+    deleteItem(item) {
+        // will be executed with the item as soon as the user selects "Yes" from the popup
+    }
+
+    render() {
+        return (
+            <div>
+                <LetterList delete={this.deleteItem} items={["a", "b"]} />
+            </div>
+        )
+    }
+}
+```
+
+**Properties**
+
+- `delete` - a function needs to be passed to the inheriting component that executes the deletion.
+
+**Methods**
+
+- `setDeleteObject` - this method is provided by the `DeleteObject` component.
+- `confirmDelete` - this is an internal method provided by the `DeleteObject` component. Do not call or 
+ override this.
+- `renderDeletePopup(title, content, styles = {})` - this will render the popup with a title, body content 
+ and style overrides. The styles provided are the same as for [`Popup`](#popup) except here they are
+ provided as keys of the a JSON object.
+
+### Automatic Resolution Detection
+
+This package provides 2 components that handle changing the window resolution:
+1. An abstract component that you can inherit from, which provides a state variable `dimension` holding
+ width and height
+2. A component that is responsible for registering the `resize` event and calling the abstract component's
+ methods to update the dimension.
+
+Usage:
+
+```javascript
+import React from "React"
+import { ResolutionDetector, WindowResolution } from "quick-n-dirty-react"
+
+class MyComponent extends WindowResolution {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            ...this.state, // this is important, if this is missing the component might not work
+            someOther: "state",
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <ResolutionDetector updateDimension={this.updateDimension} />
+                <div style={{ 
+                    width: this.state.dimension.width, 
+                    height: this.state.dimension.height,
+                }}>
+                    Some Content
+                </div>
+            </div>
+        )
+    }
+}
+```
+
+**Properties for ResolutionDetector**
+
+- `updateDimension` - provides the event handler for when the resolution changes, a default method is 
+ provided by the abstract component `WindowResolution` and can be used here.
+
+**Methods for WindowResolution**
+
+- `updateDimension({ width, height })` - this is the default method managing the abstract component's state.
+
+### `BackdropContent`
+
+This is a component similar 
+
 ## CSS Mixins
 
 **Form related:**
@@ -618,7 +756,10 @@ This will render the toggle icon (an arrow / caret) on the right side of the bro
 - `flexRow` - shortcut for `flex` with `row` `wrap`
 - `noList` - removes any dots and indentation from lists
 - `trimOverflow` - any  text overflow will be cut short with "..." (remember to add `title=".."` to your component where 
-you provide the full text if required)
+ you provide the full text if required)
+- `gridColumns(cols, colGap, maxWidth)` - creates a display grid style width a given number of columns of the same width
+ and gaps in between columns. `maxWidth` is optional.
+- `width(px)` - an element of a given width
 
 **Text related:**
 
@@ -642,3 +783,4 @@ number
 - `infoBox` - a little box with smaller font, background and border to display hints
 - `panel` - some basic formatting for a panel with border radius 
 - `clickable` - shortcut for `cursor: pointer`
+- `listIcon` - a clickable (pointer) element with a margin of 5px on each side
