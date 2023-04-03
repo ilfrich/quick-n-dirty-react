@@ -13,4 +13,5 @@ module.exports = {
     DeleteObject: require("./dist/DeleteObject").default,
     ResolutionDetector: require("./dist/ResolutionDetector").default,
     WindowResolution: require("./dist/WindowResolution").default,
+    AlertContainer: require("./dist/AlertContainer").default,
 }

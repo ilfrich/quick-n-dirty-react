@@ -263,6 +263,35 @@ The `customTimeout` can override the default `timeout` property for a given mess
 - `position` - default `bottom` - where to display the message (`top`, `bottom`, `left` (top-left), and `right` 
  (top right))
 
+If you want to pass alert functions to children of the component that contains the `<NotificationBar />` so they don't 
+need to include a `<NotificationBar />` themselves, you can use the `AlertContainer`:
+
+```javascript
+import React from "react"
+import { AlertContainer, NotificationBar } from "quick-n-dirty-react"
+
+const SomeInclude = ({ info, error, success }) => (
+    <div>
+        <div onClick={() => info("Show a notification")}>Info</div>
+        <div onClick={() => error("Show an error")}>Error</div>
+        <div onClick={() => success("Show a success message")}>Success</div>
+    </div>
+)
+
+class MyComponent extends AlertContainer {
+    // important for the AlertContainer is that you bind the NotificationBar to this.alert
+    render() {
+        return (
+            <div>
+                <NotificationBar ref={el => { this.alert = el }} />
+                <SomeInclude error={this.error} info={this.info} success={this.success} />
+            </div>
+        )
+    }
+}
+```
+
+
 ### `ToggleSection`
 
 Creates a toggle for the children element of this element. It will render an arrow right or down and maintain its own

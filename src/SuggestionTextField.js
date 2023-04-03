@@ -8,6 +8,7 @@ const style = {
         borderLeft: "1px solid #aaa",
         borderRight: "1px solid #aaa",
         width: "100%",
+        maxHeight: "200px",
     }),
     choice: hover => ({
         ...mixins.clickable,
