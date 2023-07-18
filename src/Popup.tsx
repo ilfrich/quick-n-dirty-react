@@ -2,7 +2,7 @@ import React from "react"
 import mixins from "./mixins"
 
 const style = {
-    backdrop: zIndex => ({
+    backdrop: (zIndex: number | undefined): React.CSSProperties => ({
         zIndex: `${zIndex || 600}`,
         position: "fixed",
         top: "0px",
@@ -12,7 +12,7 @@ const style = {
         display: "block",
         background: "rgba(33, 33, 33, 0.7)",
     }),
-    popup: zIndex => ({
+    popup: (zIndex: number | undefined): React.CSSProperties => ({
         zIndex: `${zIndex ? zIndex + 1 : 601}`,
         position: "fixed",
         top: "200px",
@@ -33,8 +33,25 @@ const style = {
     },
     buttons: {
         padding: "30px",
-        textAlign: "right",
+        textAlign: "right" as const,
     },
+}
+
+export interface PopupProps {
+    buttonStyle?: React.CSSProperties,
+    cancelButtonStyle?: React.CSSProperties,
+    titleStyle?: React.CSSProperties,
+    backdropStyle?: React.CSSProperties,
+    popupStyle?: React.CSSProperties,
+    bodyStyle?: React.CSSProperties,
+    buttonLineStyle?: React.CSSProperties,
+    no?: (e: React.MouseEvent<HTMLElement>) => void,
+    yes?: (e: React.MouseEvent<HTMLElement>) => void,
+    ok?: (e: React.MouseEvent<HTMLElement>) => void,
+    cancel?: (e: React.MouseEvent<HTMLElement>) => void,
+    zIndex?: number,
+    title: string,
+    children: React.ReactNode,
 }
 
 /**
@@ -44,7 +61,7 @@ const style = {
  * 'zIndex' is optional and defaults to 600.
  * @returns {object} a React component's rendering
  */
-const Popup = props => {
+const Popup = (props: PopupProps) => {
     const customButtonStyle = props.buttonStyle || {}
     const customCancelButtonStyle = props.cancelButtonStyle || {}
     const customTitleStyle = props.titleStyle || {}

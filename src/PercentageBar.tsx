@@ -2,7 +2,7 @@ import React from "react"
 import { util } from "quick-n-dirty-utils"
 
 const getTricolor = (
-    percent,
+    percent: number,
     colors = [
         [248, 105, 107],
         [255, 255, 255],
@@ -24,7 +24,7 @@ const getTricolor = (
 }
 
 const style = {
-    container: width => ({
+    container: (width?: number): React.CSSProperties => ({
         display: "grid",
         width: width ? `${width + 40}px` : "250px",
         gridTemplateColumns: width ? `${width}px 40px` : "200px 40px",
@@ -32,12 +32,12 @@ const style = {
         height: "18px",
         textAlign: "left",
     }),
-    barContainer: width => ({
+    barContainer: (width?: number): React.CSSProperties => ({
         border: "1px solid #d3d3d3",
         width: width ? `${width}px` : "200px",
         height: "20px",
     }),
-    bar: (percentage, width) => {
+    bar: (percentage: number, width?: number): React.CSSProperties => {
         const finalWidth = width || 200
         const colors = [
             [180, 30, 30], // red
@@ -55,7 +55,7 @@ const style = {
         width: "40px",
         paddingTop: "4px",
     },
-    tricolorContainer: (percentage, width) => {
+    tricolorContainer: (percentage: number, width?: number): React.CSSProperties => {
         const finalWidth = width || 200
         return {
             display: "inline-block",
@@ -66,14 +66,22 @@ const style = {
     },
 }
 
-const getTitle = props => {
-    if (props.title == null) {
-        return props.percentage.toFixed(0)
+const getTitle = (title: string | null, percentage: number) => {
+    if (title == null) {
+        return percentage.toFixed(0)
     }
-    return `${props.title} / ${props.percentage.toFixed()}%`
+    return `${title} / ${percentage.toFixed()}%`
 }
 
-const PercentageBar = props => {
+export interface PercentageBarProps {
+    title: string | null,
+    percentage: number,
+    tricolor?: boolean,
+    width?: number,
+    hideNumber?: boolean,
+}
+
+const PercentageBar = (props: PercentageBarProps) => {
     if (props.tricolor) {
         // simple tile from red (0%) -> white (50%) -> blue (100%)
         return (
@@ -86,7 +94,7 @@ const PercentageBar = props => {
     // regular red to green bar with dynamic width representing the percentage
     return (
         <div style={style.container(props.width)}>
-            <div style={style.barContainer(props.width)} title={getTitle(props)}>
+            <div style={style.barContainer(props.width)} title={getTitle(props.title, props.percentage)}>
                 <div style={style.bar(props.percentage, props.width)} />
             </div>
             {props.hideNumber ? null : <div style={style.number}>{props.percentage.toFixed(0)}%</div>}

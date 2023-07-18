@@ -1,4 +1,5 @@
 import React from "react"
+import { SideType } from "./shared-types"
 
 const messageTypes = {
     info: {
@@ -15,7 +16,11 @@ const messageTypes = {
     },
 }
 
-const positions = {
+export type PositionStyleMappingType = {
+    [side in SideType]: React.CSSProperties
+}
+
+const positions: PositionStyleMappingType = {
     bottom: {
         bottom: "0px",
         width: "100%",
@@ -42,7 +47,7 @@ const positions = {
 
 const notificationBaseStyle = {
     container: {
-        position: "fixed",
+        position: "fixed" as const,
         zIndex: "1500",
     },
     message: {
@@ -54,8 +59,26 @@ const notificationBaseStyle = {
 
 const getRandomId = () => `${new Date().getTime()}${Math.random()}`
 
-class NotificationBar extends React.Component {
-    constructor(props) {
+export type MessageType = {
+    content: string,
+    style: React.CSSProperties,
+    id: string,
+}
+export interface NotificationBarProps {
+    position?: SideType,
+    timeout?: number,
+}
+export interface NotificationBarState {
+    messages: {
+        [uuid: string]: MessageType
+    }
+}
+
+class NotificationBar extends React.Component<NotificationBarProps, NotificationBarState> {
+
+    private timers: {[uuid: string]: number} = {}
+
+    constructor(props: NotificationBarProps) {
         super(props)
 
         this.state = {
@@ -76,7 +99,7 @@ class NotificationBar extends React.Component {
         })
     }
 
-    getPosition() {
+    getPosition(): SideType {
         const position = this.props.position || "bottom"
         if (Object.keys(positions).indexOf(position) !== -1) {
             return position
@@ -84,19 +107,19 @@ class NotificationBar extends React.Component {
         return "bottom"
     }
 
-    error(message, customTimeout = null) {
+    error(message: string, customTimeout: number | null = null) {
         this.addMessage(message, messageTypes.error, customTimeout)
     }
 
-    info(message, customTimeout = null) {
+    info(message: string, customTimeout: number | null = null) {
         this.addMessage(message, messageTypes.info, customTimeout)
     }
 
-    success(message, customTimeout = null) {
+    success(message: string, customTimeout: number | null = null) {
         this.addMessage(message, messageTypes.success, customTimeout)
     }
 
-    addMessage(message, style, customTimeout = null) {
+    addMessage(message: string, style: React.CSSProperties, customTimeout: number | null = null) {
         let timeout = customTimeout
         if (timeout == null) {
             timeout = this.props.timeout || 3000 // 3 seconds default
@@ -121,7 +144,7 @@ class NotificationBar extends React.Component {
         }, timeout)
     }
 
-    popMessage(randomId) {
+    popMessage(randomId: string) {
         this.setState(oldState => {
             const messages = { ...oldState.messages }
             delete messages[randomId]

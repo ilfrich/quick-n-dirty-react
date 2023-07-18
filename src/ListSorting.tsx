@@ -1,4 +1,4 @@
-import React from "react"
+import React, { MouseEvent } from "react"
 import mixins from "./mixins"
 
 const SORT_ASCENDING = "asc"
@@ -21,7 +21,18 @@ const style = {
     },
 }
 
-const ListSorting = props => {
+export interface CurrentSortingType {
+    key: string,
+    direction: "asc" | "desc",
+}
+
+export interface ListSortingProps {
+    current: CurrentSortingType,
+    sortKey: string,
+    change: (sortKey: string) => (ev: MouseEvent<HTMLSpanElement>) => void,
+}
+
+const ListSorting = (props: ListSortingProps) => {
     const { current, sortKey } = props
     if (current != null && current.key === sortKey) {
         // currently sorting this column

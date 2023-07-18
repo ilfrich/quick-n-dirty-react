@@ -1,8 +1,24 @@
 import React from "react"
 import Popup from "./Popup"
 
-class DeleteObject extends React.Component {
-    constructor(props) {
+export interface DeleteObjectProps {
+    delete: (obj: any) => void
+}
+export interface DeleteObjectState {
+    deleteObject: any,
+}
+export interface DeleteObjectStyles {
+    buttonStyle?: React.CSSProperties,
+    cancelButtonStyle?: React.CSSProperties,
+    titleStyle?: React.CSSProperties,
+    backdropStyle?: React.CSSProperties,
+    popupStyle?: React.CSSProperties,
+    bodyStyle?: React.CSSProperties,
+    buttonLineStyle?: React.CSSProperties,
+}
+
+class DeleteObject extends React.Component<DeleteObjectProps, DeleteObjectState> {
+    constructor(props: DeleteObjectProps) {
         super(props)
 
         this.state = {
@@ -13,7 +29,7 @@ class DeleteObject extends React.Component {
         this.confirmDelete = this.confirmDelete.bind(this)
     }
 
-    setDeleteObject(object) {
+    setDeleteObject(object: any) {
         return () => {
             this.setState({ deleteObject: object })
         }
@@ -32,7 +48,7 @@ class DeleteObject extends React.Component {
         this.setState({ deleteObject: null })
     }
 
-    renderDeletePopup(title = "Delete Item", content = "Are you sure you want to delete this item?", styles = {}) {
+    renderDeletePopup(title = "Delete Item", content = "Are you sure you want to delete this item?", styles: DeleteObjectStyles = {}) {
         return (
             <Popup 
                 title={title} 

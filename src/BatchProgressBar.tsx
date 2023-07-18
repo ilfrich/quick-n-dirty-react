@@ -4,7 +4,7 @@ import mixins from "./mixins"
 
 const style = {
     progressContainer: {
-        position: "fixed",
+        position: "fixed" as const,
         bottom: "0px",
         left: "0px",
         width: "100vw",
@@ -19,14 +19,20 @@ const style = {
         background: "#fff",
         padding: "10px",
     },
-    bar: (percent, isProgress) => ({
+    bar: (percent: number, isProgress: boolean) => ({
         height: "35px",
         width: `${percent}%`,
         background: isProgress ? mixins.green.color : "#ccc",
     }),
 }
 
-const BatchProgressBar = props => {
+export interface BatchProgressBarProps {
+    total: number,
+    current: number,
+    label: string,
+}  
+
+const BatchProgressBar = (props: BatchProgressBarProps) => {
     if (props.total === 0 || isNaN(props.total) || isNaN(props.current)) {
         return null
     }

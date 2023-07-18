@@ -1,8 +1,13 @@
-import React from "react"
+import React, { MouseEvent } from "react"
 import mixins from "./mixins"
 
+export interface DimensionType {
+    width: number,
+    height: number,
+}
+
 const style = {
-    content: (dimension, contentWidth, contentHeight) => ({
+    content: (dimension: DimensionType, contentWidth: number, contentHeight: number): React.CSSProperties => ({
         position: "fixed",
         left: `${(dimension.width - contentWidth) / 2}px`,
         top: `${(dimension.height - contentHeight) / 2}px`,
@@ -21,7 +26,17 @@ const style = {
     }
 }
 
-const BackdropContent = ({ contentWidth, contentHeight, dimension, children, title, cancel, titleStyle }) => (
+export interface BackdropContentProps {
+    contentWidth: number,
+    contentHeight: number,
+    dimension: DimensionType,
+    children: React.ReactNode,
+    title: string,
+    cancel: (ev: MouseEvent<HTMLDivElement>) => void,
+    titleStyle?: React.CSSProperties,
+}
+
+const BackdropContent = ({ contentWidth, contentHeight, dimension, children, title, cancel, titleStyle }: BackdropContentProps) => (
     <div>
         <div style={mixins.backdrop} onClick={cancel} />
         <div style={style.content(dimension, contentWidth, contentHeight)}>

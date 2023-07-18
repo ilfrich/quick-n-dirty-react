@@ -19,32 +19,43 @@ const style = {
     },
 }
 
-class DateRangeSelect extends React.Component {
-    constructor(props) {
+export interface DateRangeSelectProps {
+    defaultFrom?: DateTime,
+    defaultTo?: DateTime,
+    changeTo?: (dt: DateTime) => void,
+    changeFrom?: (dt: DateTime) => void,
+}
+
+class DateRangeSelect extends React.Component<DateRangeSelectProps> {
+
+    private from = React.createRef<HTMLInputElement>()
+    private to = React.createRef<HTMLInputElement>()
+
+    constructor(props: DateRangeSelectProps) {
         super(props)
         this.changeFrom = this.changeFrom.bind(this)
         this.changeTo = this.changeTo.bind(this)
         this.getValues = this.getValues.bind(this)
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: DateRangeSelectProps) {
         // allows manipulation from the outside
         if (prevProps.defaultFrom !== this.props.defaultFrom) {
-            this.from.value = util.formatDate(this.props.defaultFrom)
+            this.from.current!.value = util.formatDate(this.props.defaultFrom)
         }
         if (prevProps.defaultTo !== this.props.defaultTo) {
-            this.to.value = util.formatDate(this.props.defaultTo)
+            this.to.current!.value = util.formatDate(this.props.defaultTo)
         }
     }
 
     getValues() {
         let from = null
         let to = null
-        if (this.from.value !== "") {
-            from = DateTime.fromSQL(this.from.value)
+        if (this.from.current!.value !== "") {
+            from = DateTime.fromSQL(this.from.current!.value)
         }
-        if (this.to.value !== "") {
-            to = DateTime.fromSQL(this.to.value)
+        if (this.to.current!.value !== "") {
+            to = DateTime.fromSQL(this.to.current!.value)
         }
         return {
             from,
@@ -54,13 +65,13 @@ class DateRangeSelect extends React.Component {
 
     changeFrom() {
         if (this.props.changeFrom != null) {
-            this.props.changeFrom(DateTime.fromSQL(this.from.value))
+            this.props.changeFrom(DateTime.fromSQL(this.from.current!.value))
         }
     }
 
     changeTo() {
         if (this.props.changeTo != null) {
-            this.props.changeTo(DateTime.fromSQL(this.to.value))
+            this.props.changeTo(DateTime.fromSQL(this.to.current!.value))
         }
     }
 
@@ -71,18 +82,14 @@ class DateRangeSelect extends React.Component {
                 <div style={mixins.label}>To</div>
                 <input
                     type="date"
-                    ref={e => {
-                        this.from = e
-                    }}
+                    ref={this.from}
                     style={mixins.textInput}
                     defaultValue={this.props.defaultFrom ? util.formatDate(this.props.defaultFrom) : ""}
                     onChange={this.changeFrom}
                 />
                 <input
                     type="date"
-                    ref={e => {
-                        this.to = e
-                    }}
+                    ref={this.to}
                     style={mixins.textInput}
                     defaultValue={this.props.defaultTo ? util.formatDate(this.props.defaultTo) : ""}
                     onChange={this.changeTo}

@@ -7,11 +7,11 @@ const style = {
         display: "grid",
         gridTemplateColumns: "1fr 150px",
     },
-    bar: width => ({
+    bar: (width: number): React.CSSProperties => ({
         width: `calc(${width} - 10px)`,
         padding: "10px 5px",
     }),
-    pageNumber: selected => ({
+    pageNumber: (selected: boolean): React.CSSProperties => ({
         fontFamily: "monospace",
         padding: "0px 5px",
         cursor: selected ? "normal" : "pointer",
@@ -28,11 +28,20 @@ const style = {
     },
     rightFlex: {
         ...mixins.flexRow,
-        flexDirection: "row-reverse",
+        flexDirection: "row-reverse" as const,
     },
 }
 
-const PaginationBar = props => {
+export interface PaginationBarProps {
+    pageSizes?: number[],
+    pageSize: number,
+    total: number,
+    page: number,    
+    setPaging: (paging: number, pageSize: number) => void,
+    width?: number,
+}
+
+const PaginationBar = (props: PaginationBarProps) => {
     const { pageSize, total } = props
     const pageSizes = props.pageSizes || [25, 50, 100]
     const page = props.page + 1
@@ -42,7 +51,7 @@ const PaginationBar = props => {
 
     const pageNumbers = util.range(1, Math.ceil(total / pageSize))
 
-    const setPaging = (pageNumber, newPageSize) => {
+    const setPaging = (pageNumber: number, newPageSize: number) => {
         return () => {
             if (pageNumber === page && newPageSize === pageSize) {
                 return
@@ -66,7 +75,7 @@ const PaginationBar = props => {
             <div style={style.layout}>
                 <div style={mixins.flexRow}>
                     <div style={style.label}>Page:</div>
-                    {pageNumbers.map(pageNumber => (
+                    {pageNumbers.map((pageNumber: number) => (
                         <div
                             style={style.pageNumber(pageNumber === page)}
                             onClick={setPaging(pageNumber, pageSize)}

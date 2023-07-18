@@ -15,8 +15,21 @@ const style = {
     },
 }
 
-class ToggleSection extends React.Component {
-    constructor(props) {
+export interface ToggleSectionProps {
+    show?: boolean,
+    update?: (show: boolean) => void,
+    fontStyle?: React.CSSProperties,
+    prefix?: boolean,
+    label?: string,
+    children: React.ReactNode,
+}
+
+export interface ToggleSectionState {
+    show: boolean
+}
+
+class ToggleSection extends React.Component<ToggleSectionProps, ToggleSectionState> {
+    constructor(props: ToggleSectionProps) {
         super(props)
         this.state = {
             show: props.show || false,
@@ -39,7 +52,7 @@ class ToggleSection extends React.Component {
                         // notify parent if required
                         this.props.update(this.state.show)
                     }
-                    resolve()
+                    resolve(true)
                 }
             )
         })
@@ -49,11 +62,11 @@ class ToggleSection extends React.Component {
     show() {
         return new Promise(resolve => {
             if (this.state.show === true) {
-                resolve()
+                resolve(true)
                 return
             }
             this.toggle().then(() => {
-                resolve()
+                resolve(true)
             })
         })
     }
@@ -61,11 +74,11 @@ class ToggleSection extends React.Component {
     hide() {
         return new Promise(resolve => {
             if (this.state.show === false) {
-                resolve()
+                resolve(true)
                 return
             }
             this.toggle().then(() => {
-                resolve()
+                resolve(true)
             })
         })        
     }

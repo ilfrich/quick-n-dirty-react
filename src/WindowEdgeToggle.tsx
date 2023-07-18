@@ -1,5 +1,6 @@
 import React from "react"
 import mixins from "./mixins"
+import { SideType } from "./shared-types"
 
 /* Properties:
  * - side: top, left, right, bottom
@@ -17,12 +18,41 @@ import mixins from "./mixins"
 
 const globalStyle = {
     contentWrapper: {
-        position: "relative",
+        position: "relative" as const,
     },
 }
 
-class WindowEdgeToggle extends React.Component {
-    constructor(props) {
+// types
+export type SideLookupType = {
+    [side in SideType]: SideType
+}
+export type PositionLookupValueType = {
+    [index: number]: SideType
+}
+export type PositionLookupType = {
+    [side in SideType]: PositionLookupValueType
+}
+export interface WindowEdgeToggleProps {
+    initialShow: boolean,
+    side?: SideType,
+    padding?: number,
+    background?: string,
+    backgroundToggle?: string,
+    color?: string,
+    absolute?: boolean,
+    margin?: number,
+    distance?: number,
+    zIndex?: number,
+    onChangeShow: (s: boolean) => void,
+    children: React.ReactNode,
+}
+export interface WindowEdgeToggleState {
+    show: boolean,
+}
+
+class WindowEdgeToggle extends React.Component<WindowEdgeToggleProps, WindowEdgeToggleState> {
+
+    constructor(props: WindowEdgeToggleProps) {
         super(props)
 
         this.state = {
@@ -36,6 +66,7 @@ class WindowEdgeToggle extends React.Component {
         }
 
         this.toggle = this.toggle.bind(this)
+        this.handleToggle = this.handleToggle.bind(this)
         this.getArrowCharacter = this.getArrowCharacter.bind(this)
         this.getContainerCss = this.getContainerCss.bind(this)
         this.getContentStyle = this.getContentStyle.bind(this)
@@ -43,8 +74,8 @@ class WindowEdgeToggle extends React.Component {
         this.getToggleStyle = this.getToggleStyle.bind(this)
     }
 
-    getArrowCharacter() {
-        const opposite = {
+    getArrowCharacter(): React.ReactElement<HTMLSpanElement> {
+        const opposite: SideLookupType = {
             top: "bottom",
             right: "left",
             left: "right",
@@ -52,7 +83,7 @@ class WindowEdgeToggle extends React.Component {
         }
 
         const side = this.props.side || "right"
-        const effectiveSide = this.state.show ? side : opposite[side]
+        const effectiveSide: SideType = this.state.show ? side : opposite[side]
 
         const lookup = {
             top: <span>&#9652;</span>,
@@ -64,7 +95,7 @@ class WindowEdgeToggle extends React.Component {
     }
 
     getContentStyle() {
-        const style = {
+        const style: React.CSSProperties = {
             display: this.state.show ? "inline-block" : "none",
             padding: this.props.padding != null ? `${this.props.padding}px` : "15px",
             background: this.props.background || "#f3f3f3",
@@ -89,7 +120,7 @@ class WindowEdgeToggle extends React.Component {
         return style
     }
 
-    getToggleStyle() {
+    getToggleStyle(): React.CSSProperties {
         const background =
             this.props.backgroundToggle != null ? this.props.backgroundToggle : this.props.background || "#f3f3f3"
         return {
@@ -105,9 +136,9 @@ class WindowEdgeToggle extends React.Component {
         }
     }
 
-    getToggleArrowStyle() {
+    getToggleArrowStyle(): React.CSSProperties {
         if (this.props.side === "right" || this.props.side === "left") {
-            return null
+            return {}
         }
         return {
             position: "absolute",
@@ -116,8 +147,8 @@ class WindowEdgeToggle extends React.Component {
         }
     }
 
-    getContainerCss() {
-        const style = {}
+    getContainerCss(): React.CSSProperties {
+        const style: React.CSSProperties = {}
         if (this.props.absolute === true) {
             style.position = "absolute"
         } else {
@@ -125,14 +156,15 @@ class WindowEdgeToggle extends React.Component {
         }
         const margin = this.props.margin || 0
         const distance = this.props.distance || 0
-        const side = this.props.side || "right"
+        const side: SideType = this.props.side || "right"
 
-        const sides = {
+        const corners: PositionLookupType = {
             top: ["top", "left"],
             left: ["left", "top"],
             right: ["right", "top"],
             bottom: ["bottom", "left"],
-        }[side]
+        }
+        const sides: PositionLookupValueType = corners[side]
 
         style[sides[0]] = `${margin}px`
         style[sides[1]] = `${distance}px`
@@ -142,7 +174,7 @@ class WindowEdgeToggle extends React.Component {
         return style
     }
 
-    toggle(newValue = null) {
+    toggle(newValue: boolean | null = null) {
         this.setState(
             oldState => ({
                 ...oldState,
@@ -157,10 +189,14 @@ class WindowEdgeToggle extends React.Component {
         )
     }
 
+    handleToggle() {
+        this.toggle()
+    }
+
     render() {
         return (
             <div style={this.getContainerCss()}>
-                <div style={this.getToggleStyle()} onClick={this.toggle}>
+                <div style={this.getToggleStyle()} onClick={this.handleToggle}>
                     <div style={this.getToggleArrowStyle()}>{this.getArrowCharacter()}</div>
                 </div>
                 <div style={globalStyle.contentWrapper}>

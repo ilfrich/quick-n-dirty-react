@@ -1,8 +1,10 @@
 import React from "react"
 
+export interface WindowResolutionProps {}
+
 class WindowResolution extends React.Component {
 
-    constructor(props) {
+    constructor(props: WindowResolutionProps) {
         super(props)
         
         this.state = {
@@ -15,7 +17,7 @@ class WindowResolution extends React.Component {
         this.updateDimension = this.updateDimension.bind(this)
     }
 
-    updateDimension(newDimension) {
+    updateDimension(newDimension: { width: number, height: number }) {
         this.setState({
             dimension: {
                 width: newDimension.width,

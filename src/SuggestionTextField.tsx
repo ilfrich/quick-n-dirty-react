@@ -1,27 +1,43 @@
-import React from "react"
+import React, { ChangeEvent, KeyboardEvent } from "react"
 import mixins from "./mixins"
 
 const style = {
-    dropdown: zIndex => ({
-        position: "absolute",
+    dropdown: (zIndex: string) => ({
+        position: "absolute" as const,
         zIndex,
         borderLeft: "1px solid #aaa",
         borderRight: "1px solid #aaa",
         width: "100%",
         maxHeight: "200px",
     }),
-    choice: hover => ({
+    choice: (hover: boolean) => ({
         ...mixins.clickable,
         borderBottom: "1px solid #aaa",
         background: hover ? "#ccc" : "#eee",
         padding: "4px",
     }),
     dropdownArrow: {
-        position: "absolute",
+        position: "absolute" as const,
         right: "0px",
         top: "0px",
         padding: "5px",
     },
+}
+
+export interface SuggestionTextFieldProps {
+    onKeyPress?: (ev: KeyboardEvent) => void,
+    onChange?: (ev: ChangeEvent) => void,
+    onSelect?: (val: string) => void,
+    matchCaseSensitive?: boolean,
+    items?: string[],
+    zIndex?: string,
+    disabled?: boolean,
+    defaultValue?: string,
+    inputStyle?: React.CSSProperties,
+}
+export interface SuggestionTextFieldState {
+    choices?: string[] | null,
+    hover?: string | null,
 }
 
 /**
@@ -38,8 +54,11 @@ const style = {
  * - onChange (null) - event handler when the user changes the text field value - not triggered onSelect
  * - zIndex (5) - the zIndex of the drop down
  */
-class SuggestionTextField extends React.Component {
-    constructor(props) {
+class SuggestionTextField extends React.Component<SuggestionTextFieldProps, SuggestionTextFieldState> {
+
+    private field = React.createRef<HTMLInputElement>()
+
+    constructor(props: SuggestionTextFieldProps) {
         super(props)
         this.state = {
             choices: null,
@@ -58,8 +77,8 @@ class SuggestionTextField extends React.Component {
      * @param {Event} ev - the keyUp event
      * @returns always true
      */
-    onKeyPress(ev) {
-        const searchTerm = ev.target.value
+    onKeyPress(ev: KeyboardEvent<HTMLInputElement>) {
+        const searchTerm = (ev.target as HTMLInputElement).value
         if (searchTerm.length === 0) {
             this.setState({
                 choices: null,
@@ -80,7 +99,7 @@ class SuggestionTextField extends React.Component {
      * Will call the onChange event handler, if one is passed in as property.
      * @param {Event} ev - the change event on the input
      */
-    onChange(ev) {
+    onChange(ev: ChangeEvent) {
         if (this.props.onChange != null) {
             this.props.onChange(ev)
         }
@@ -91,9 +110,9 @@ class SuggestionTextField extends React.Component {
      * @param {String} searchTerm - the current value of the text field
      * @returns a list of items matching the search criteria
      */
-    getMatchingItems(searchTerm) {
+    getMatchingItems(searchTerm: string) {
         // transformation function
-        const transform = this.props.matchCaseSensitive === true ? val => val : val => val.toLowerCase()
+        const transform = this.props.matchCaseSensitive === true ? (val: string) => val : (val: string) => val.toLowerCase()
         // filter items
         return (this.props.items || []).filter(item => transform(item).includes(transform(searchTerm)))
     }
@@ -103,15 +122,15 @@ class SuggestionTextField extends React.Component {
      * @returns the current value of the input field
      */
     getValue() {
-        return this.field.value
+        return this.field.current!.value
     }
 
     /**
      * Manually updates the value in the input field and resets the suggestions.
      * @param {String} newVal - the new value for the input
      */
-    setValue(newVal) {
-        this.field.value = newVal
+    setValue(newVal: string) {
+        this.field.current!.value = newVal
         this.setState({
             choices: null,
             hover: null,
@@ -123,7 +142,7 @@ class SuggestionTextField extends React.Component {
      * @param {String} hover - the new hover state, the value from the list of selections or null
      * @returns an event handler
      */
-    setHover(hover) {
+    setHover(hover: string | null) {
         return () => {
             this.setState({ hover })
         }
@@ -149,9 +168,9 @@ class SuggestionTextField extends React.Component {
      * @param {String} val - the selected value
      * @returns an event handler
      */
-    select(val) {
+    select(val: string) {
         return () => {
-            this.field.value = val
+            this.field.current!.value = val
             this.setState({
                 choices: null,
                 hover: null,
@@ -171,16 +190,14 @@ class SuggestionTextField extends React.Component {
                     onKeyUp={this.onKeyPress}
                     defaultValue={this.props.defaultValue || ""}
                     onChange={this.onChange}
-                    ref={el => {
-                        this.field = el
-                    }}
+                    ref={this.field}
                     disabled={this.props.disabled === true}
                 />
                 <div style={style.dropdownArrow} onClick={this.expandAll}>
                     &#9662;
                 </div>
                 {this.state.choices != null && this.state.choices.length > 0 ? (
-                    <div style={style.dropdown(this.props.zIndex || 5)}>
+                    <div style={style.dropdown(this.props.zIndex || "5")}>
                         {this.state.choices.map(choice => (
                             <div
                                 style={style.choice(this.state.hover === choice)}

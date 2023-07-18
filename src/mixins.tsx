@@ -39,28 +39,28 @@ export default {
         clear: "both",
     },
     relative: {
-        position: "relative",
+        position: "relative" as const,
     },
     right: {
-        textAlign: "right",
+        textAlign: "right" as const,
     },
     left: {
-        textAlign: "left",
+        textAlign: "left" as const,
     },
     center: {
-        textAlign: "center",
+        textAlign: "center" as const,
     },
-    vSpacer: height => ({
+    vSpacer: (height: number) => ({
         height: `${height}px`,
         display: "block",
     }),
-    indent: px => ({
+    indent: (px: number) => ({
         paddingLeft: `${px}px`,
     }),
     flexRow: {
         display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
+        flexDirection: "row" as const,
+        flexWrap: "wrap" as const,
     },
     noList: {
         margin: "0px",
@@ -72,13 +72,13 @@ export default {
         overflow: "hidden",
         textOverflow: "ellipsis",
     },
-    gridColumns: (cols, colGap = 5, maxWidth = null) => ({
+    gridColumns: (cols: number, colGap = 5, maxWidth = null) => ({
         display: "grid",
         gridTemplateColumns: `repeat(${cols}, 1fr)`,
         gridColumnGap: `${colGap}px`,
         maxWidth: maxWidth != null ? `${maxWidth}px` : null,
     }),
-    width: px => ({
+    width: (px: number) => ({
         width: `${px}px`,
     }),
 
@@ -103,7 +103,7 @@ export default {
         textDecoration: "underline",
         cursor: "pointer",
     },
-    percentage(percent) {
+    percentage(percent: number) {
         if (isNaN(percent)) {
             return {
                 color: "#666",
@@ -136,7 +136,7 @@ export default {
 
     // components
     backdrop: {
-        position: "fixed",
+        position: "fixed" as const,
         top: "0",
         left: "0",
         background: "rgba(60, 60, 60, 0.3)",
@@ -145,7 +145,7 @@ export default {
         zIndex: "600",
     },
     popup: {
-        container: width => ({
+        container: (width: number) => ({
             margin: "auto",
             top: "100px",
             width: `${width}px`,
@@ -153,7 +153,7 @@ export default {
             background: "#eee",
             border: "1px solid #eee",
             borderRadius: "10px",
-            position: "fixed",
+            position: "fixed" as const,
             zIndex: "601",
         }),
         header: {
@@ -168,11 +168,11 @@ export default {
         },
         footer: {
             borderTop: "1px solid #ccc",
-            textAlign: "right",
+            textAlign: "right" as const,
             padding: "30px",
         },
         close: {
-            position: "absolute",
+            position: "absolute" as const,
             right: "30px",
             top: "10px",
             cursor: "pointer",
@@ -199,7 +199,7 @@ export default {
         color: "#666",
     },
     // idx is the row index
-    stripedTable: (idx, oddColor = "#f3f3f3") => ({
+    stripedTable: (idx: number, oddColor = "#f3f3f3") => ({
         display: "grid",
         background: idx % 2 === 1 ? oddColor : "none",
     }),
@@ -263,7 +263,7 @@ export default {
         cursor: "wait",
     },
     formLine: {
-        textAlign: "left",
+        textAlign: "left" as const,
         padding: "0px 15px",
     },
     buttonLine: {

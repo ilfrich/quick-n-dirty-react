@@ -6,7 +6,7 @@ const style = {
     container: {
         display: "inline-block",
     },
-    columns: (columns, idx = 0, lineColors = ["#fff", "#fafafa"]) => ({
+    columns: (columns: string[], idx = 0, lineColors = ["#fff", "#fafafa"]) => ({
         display: "grid",
         gridTemplateColumns: `${columns.join(" ")} 30px`, // 30px for delete icon
         gridColumnGap: "2px",
@@ -19,17 +19,59 @@ const style = {
     },
 }
 
-class AdjustableList extends React.Component {
-    constructor(props) {
-        super(props)
-        this.uuid = URL.createObjectURL(new Blob([])).slice(-36)
+export type ItemType = {
+    [s: string]: any,
+}
+export type KeyValueMapping = {
+    [s: string]: string | number | boolean
+}
+export type StringMapping = {
+    [s: string]: string
+}
+export type FormConfigurationValueType = string | number | boolean | StringMapping | string[]
+export type FormConfigurationType = {
+    [s: string]: FormConfigurationValueType
+}
+export type KeyValueFunctionMapping = {
+    [s: string]: (value: string | number | boolean, item: ItemType) => boolean | string | number,
+}
+export type NewAttributesType = {
+    [s: string]: HTMLInputElement | HTMLSelectElement | null
+}
+export interface AdjustableListProps {
+    attributes: KeyValueMapping,
+    columns: string[],
+    items?: ItemType[],
+    form?: FormConfigurationType,
+    parsers?: KeyValueFunctionMapping,
+    validators?: KeyValueFunctionMapping,
+    formatter?: KeyValueFunctionMapping,
+    validateItem?: (item: KeyValueMapping) => boolean,
+    validateRemove?: (item: KeyValueMapping) => boolean,
+    update?: (items: KeyValueMapping[]) => void,
+    listHeaderStyle?: React.CSSProperties,
+    buttonStyle?: React.CSSProperties,
+    lineColors?: string[],
+    showHeader?: boolean,
+}
+export interface AdjustableListState {
+    items: KeyValueMapping[],
+    keepValues: boolean,
+}
 
+class AdjustableList extends React.Component<AdjustableListProps, AdjustableListState> {
+
+    private uuid: string = URL.createObjectURL(new Blob([])).slice(-36)
+    private alert = React.createRef<NotificationBar>()
+    private newAttributes: NewAttributesType = {}
+
+    constructor(props: AdjustableListProps) {
+        super(props)
+        
         this.state = {
             items: props.items != null ? [...props.items] : [],
             keepValues: false,
         }
-
-        this.newAttributes = {}
 
         this.getItems = this.getItems.bind(this)
         this.addItem = this.addItem.bind(this)
@@ -45,25 +87,27 @@ class AdjustableList extends React.Component {
 
     addItemFromForm() {
         // collect attribute values
-        const item = {}
+        const item: KeyValueMapping = {}
         Object.keys(this.props.attributes).map((attr) => {
             item[attr] =
-                this.props.form[attr] === "boolean" ? this.newAttributes[attr].checked : this.newAttributes[attr].value
+                this.props.form != null && this.props.form[attr] === "boolean" ? (this.newAttributes[attr] as HTMLInputElement).checked : this.newAttributes[attr]!.value
         })
 
         // apply parsers to elements
         Object.keys(this.props.parsers || {}).map((attr) => {
-            item[attr] = this.props.parsers[attr](item[attr], item)
+            item[attr] = this.props.parsers![attr](item[attr], item)
         })
 
         // validate
         let invalidAttribute = null
+        
         Object.keys(this.props.validators || {}).map((attr) => {
-            if (this.props.validators[attr](item[attr], item) === false) {
-                this.alert.info(`Invalid value for ${this.props.attributes[attr]}`)
+            if (this.props.validators![attr](item[attr], item) === false) {
+                this.alert.current!.info(`Invalid value for ${this.props.attributes[attr]}`)
                 invalidAttribute = attr
             }
         })
+        
         if (invalidAttribute != null) {
             return
         }
@@ -74,14 +118,17 @@ class AdjustableList extends React.Component {
                 // reset form fields
                 Object.keys(this.newAttributes).forEach((attr) => {
                     const field = this.newAttributes[attr]
-                    if (this.props.form[attr] === "boolean") {
-                        // reset checkboxes
-                        field.checked = false
+                    if (this.props.form == null) {
                         return
                     }
-                    if (this.props.form[attr] == null || ["datetime", "date", "number"].includes(this.props.form[attr])) {
+                    if (this.props.form[attr] === "boolean") {
+                        // reset checkboxes
+                        (field as HTMLInputElement).checked = false
+                        return
+                    }
+                    if (this.props.form[attr] == null || ["datetime", "date", "number"].includes(this.props.form[attr] as string)) {
                         // reset inputs
-                        field.value = ""
+                        field!.value = ""
                     }
                 })
             }
@@ -91,12 +138,12 @@ class AdjustableList extends React.Component {
     }
 
 
-    addItem(item) {
+    addItem(item: KeyValueMapping) {
         // validate item
         if (this.props.validateItem != null) {
             const valid = this.props.validateItem(item)
             if (valid === false) {
-                this.alert.info("Validation failed")
+                this.alert.current!.info("Validation failed")
                 return new Promise((resolve, reject) => {
                     reject("Validation failed")
                 })
@@ -119,12 +166,12 @@ class AdjustableList extends React.Component {
         })        
     }
 
-    removeItem(idx) {
+    removeItem(idx: number) {
         return () => {
             if (this.props.validateRemove != null) {
                 const outcome = this.props.validateRemove(this.state.items[idx])
                 if (outcome === false) {
-                    this.alert.info("Cannot remove this item")
+                    this.alert.current!.info("Cannot remove this item")
                     return
                 }
             }
@@ -153,7 +200,7 @@ class AdjustableList extends React.Component {
         }))
     }
 
-    formatValue(attr, value, item) {
+    formatValue(attr: string, value: any, item: ItemType): any {
         // handles formatter
         if (this.props.formatter != null && this.props.formatter[attr] != null) {
             return this.props.formatter[attr](value, item)
@@ -162,15 +209,15 @@ class AdjustableList extends React.Component {
         // handles form parameters passed in for dropdowns with key, value pairs
         if (this.props.form != null && this.props.form[attr] != null) {
             const formConfig = this.props.form[attr]
-            if (formConfig[value] != null) {
-                return formConfig[value]
+            if ((formConfig as StringMapping)[value as string] != null) {
+                return (formConfig as StringMapping)[value as string]
             }
         }
 
         return value
     }
 
-    renderFormField(attr, fieldConfig) {
+    renderFormField(attr: string, fieldConfig: FormConfigurationValueType) {
         if (fieldConfig === "datetime") {
             return (
                 <input
@@ -277,11 +324,7 @@ class AdjustableList extends React.Component {
 
         return (
             <div style={style.container}>
-                <NotificationBar
-                    ref={(el) => {
-                        this.alert = el
-                    }}
-                />
+                <NotificationBar ref={this.alert} />
                 {this.props.showHeader === true ? (
                     <div style={style.columns(this.props.columns, 0, lineColors)}>
                         {Object.keys(this.props.attributes).map((attr) => (
@@ -310,7 +353,7 @@ class AdjustableList extends React.Component {
                     {Object.keys(this.props.attributes).map((attr) => (
                         <div key={attr} style={style.formSection}>
                             <label style={mixins.label}>{this.props.attributes[attr]}</label>
-                            {this.props.form[attr] != null ? (
+                            {this.props.form != null && this.props.form[attr] != null ? (
                                 this.renderFormField(attr, this.props.form[attr])
                             ) : (
                                 <input

@@ -1,7 +1,21 @@
 import React from "react"
 
-class ResolutionDetector extends React.Component {
-    constructor(props) {
+export interface ResolutionType {
+    width: number,
+    height: number,
+}
+export interface ResolutionDetectorState {
+    resolution: ResolutionType,
+}
+export interface ResolutionDetectorProps {
+    updateDimension?: (dim: ResolutionType) => void,
+}
+
+class ResolutionDetector extends React.Component<ResolutionDetectorProps, ResolutionDetectorState> {
+
+    private event: () => void
+
+    constructor(props: ResolutionDetectorProps) {
         super(props)
 
         this.state = {
@@ -35,7 +49,7 @@ class ResolutionDetector extends React.Component {
         return this.state.resolution
     }
 
-    setNewResolution(newResolution) {
+    setNewResolution(newResolution: ResolutionType) {
         this.setState({ resolution: newResolution })
         if (this.props.updateDimension != null) {
             this.props.updateDimension(newResolution)
