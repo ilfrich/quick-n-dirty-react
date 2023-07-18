@@ -14,4 +14,5 @@ module.exports = {
     ResolutionDetector: require("./dist/ResolutionDetector").default,
     WindowResolution: require("./dist/WindowResolution").default,
     AlertContainer: require("./dist/AlertContainer").default,
+    AdjustableList: require("./dist/AdjustableList").default,
 }

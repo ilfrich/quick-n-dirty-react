@@ -22,21 +22,56 @@ class ToggleSection extends React.Component {
             show: props.show || false,
         }
         this.toggle = this.toggle.bind(this)
+        this.show = this.show.bind(this)
+        this.hide = this.hide.bind(this)
+        this.isShown = this.isShown.bind(this)
     }
 
     toggle() {
-        this.setState(
-            oldState => ({
-                ...oldState,
-                show: !oldState.show,
-            }),
-            () => {
-                if (this.props.update != null) {
-                    // notify parent if required
-                    this.props.update(this.state.show)
+        return new Promise(resolve => {
+            this.setState(
+                oldState => ({
+                    ...oldState,
+                    show: !oldState.show,
+                }),
+                () => {
+                    if (this.props.update != null) {
+                        // notify parent if required
+                        this.props.update(this.state.show)
+                    }
+                    resolve()
                 }
+            )
+        })
+        
+    }
+
+    show() {
+        return new Promise(resolve => {
+            if (this.state.show === true) {
+                resolve()
+                return
             }
-        )
+            this.toggle().then(() => {
+                resolve()
+            })
+        })
+    }
+
+    hide() {
+        return new Promise(resolve => {
+            if (this.state.show === false) {
+                resolve()
+                return
+            }
+            this.toggle().then(() => {
+                resolve()
+            })
+        })        
+    }
+
+    isShown() {
+        return this.state.show
     }
 
     render() {

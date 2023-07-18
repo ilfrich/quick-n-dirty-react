@@ -20,6 +20,7 @@ npm install --save quick-n-dirty-react
     11. [DeleteObject](#deleteobject)
     12. [Automatic Resolution Detection](#automatic-resolution-detection)
     13. [BackdropContent](#backdropcontent)
+    14. [Adjustable List](#adjustablelist)
 2. [CSS Mixins](#css-mixins)
 
 ## Components
@@ -762,7 +763,177 @@ class MyComponent extends WindowResolution {
 
 ### `BackdropContent`
 
-This is a component similar 
+This is a component similar to the popup, but only contains the backdrop. You can provide any children elements that 
+will be displayed on top of the backdrop.
+
+**Properties for `BackdropContent`**
+
+- `contentWidth` - the width of the content in pixel (e.g. 800)
+- `contentHeight` - the height of the content in pixel (e.g. 300)
+- `dimension` - a JSON document with `width` and `height` keys providing the dimension of the content
+- `title` - a title displayed at the top of the content
+- `titleStyle` - the style overwriting the default style for the title section
+- `cancel` - a click handler when the user clicks on the backdrop
+
+
+### `AdjustableList`
+
+This is a complex component to render a list of items with the capabilities to add and remove items to the list.
+
+Note that when a new row is added, all item values will be read from the form fields. Only after all values have been
+read, will the parsers be applied. `boolean` fields (see `form` parameter) will automatically be parsed to boolean 
+values. Strings is the default form parameter type and string fields do not have to be specified in the `form` 
+parameter. 
+
+Please be aware that you are responsible for providing appropriate column widths to render all the form elements and 
+values correctly.
+
+**Usage:**
+
+This example shows all the elements in action. Real-world examples will be smaller. Style overwrites are not used in 
+this example.
+
+```javascript
+import React from "React"
+import { AdjustableList } from "quick-n-dirty-react"
+// we use Luxon to parse and format dates, you can use whatever library you want
+import { DateTime } from "luxon"  
+
+// declare all your formatters
+const booleanFormatter = (value, item) => value === true ? "Yes" : "No"
+// we can use the whole row item to enrich our formatter
+const datetimeFormatter = (value, item) => DateTime.fromSeconds(value, { zone: item.timezone }).toFormat("dd/MM/yy T")
+const dateFormatter = (value, item) => DateTime.fromFormat(value, "yyyy-MM-dd").toFormat("dd/MM/yy")
+
+// declare all your parsers
+const datetimeParser = (value, item) => 
+    DateTime.fromFormat(value.replace("T", " "), "yyyy-MM-dd HH:mm", { zone: item.timezone }).toSeconds()
+
+// declare all your validators for attributes
+const datetimeValidator = (value, item) => !Number.isNaN(value)  // the parser converts this to a timestamp
+const dateValidator = (value, item) => value !== ""  // we keep this as a string
+
+// declare the validator for any new item to be added
+const validateItem = item =>   // ensure that start datetime is before end date
+    item.startTs < DateTime.fromFormat(item.endDate, "yyyy-MM-dd", { zone: item.timezone }).toSeconds()
+
+// declare validator for removal of items
+const validateRemove = item => DateTime.now().toSeconds() > item.startTs  // start timestamp has already passed
+
+
+// my react component
+class MyComponent extends React.Component {
+    
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            // we just populate the list with an initial item (can be [] as well or be read from the `props`)
+            items: [{
+                label: "Hello",
+                total: 15,
+                check: false,
+                startTs: 1689643000,
+                endDate: "2023-07-26",
+                timezone: "Australia/Melbourne",
+                country: "AUS",
+            }]
+        }
+
+        this.updateList = this.updateList.bind(this)
+    }
+
+    updateList(values) {
+        this.setState({ items: values })
+    }
+
+    render() {
+        <>
+            <AdjustableList
+                columns={["80px", "50px", "50px", "195px", "120px", "140px", "80px"]}
+                attributes={{
+                    label: "Label",
+                    total: "Total",
+                    check: "True",
+                    startTs: "Start Date / Time",
+                    endDate: "End Date",
+                    timezone: "Timezone",
+                    country: "Country",
+                }}
+                update={this.updateList}
+                formatter={{
+                    check: booleanFormatter,
+                    startTs: datetimeFormatter,
+                    endDate: dateFormatter,
+                }}
+                parsers={{
+                    startTs: datetimeParser,
+                }}
+                validators={{
+                    startTs: datetimeValidator,
+                    endDate: dateValidator,
+                }}
+                validateItem={validateItem}
+                validateRemove={validateRemove}
+                form={{
+                    total: "number",
+                    check: "boolean",
+                    startTs: "datetime",
+                    endDate: "date",
+                    timezone: ["Australia/Melbourne", "Germany/Berlin", "UTC"]
+                    country: {
+                        AUS: "Australia",
+                        GER: "Germany",
+                    }
+                }}
+            />
+        </>
+    }
+}
+```
+
+**Functional Properties**
+
+- `columns` - REQUIRED - will define the column widths. The values (provided as array of strings) will be fed directly 
+ into a `display: grid` grid column definition. Please note that the component will add 2px gap between columns. In the
+ form section, the component will also add 5px on each side of form components.
+- `attributes` - REQUIRED - a JSON object with the attributes of the list items as key and the label of each attribute
+ as string value.
+- `update` - optional - a function that will be called, when the list has been changed (items added or removed), it will
+ receive the complete list of items as parameter.
+- `formatter` - optional - a JSON object with attributes as keys and functions with parameters (value, item) as value, 
+ which handles the display of values in the list
+- `parsers` - optional - a JSON object with attributes as keys and functions with parameters (value, item) as value, 
+ which handles parsing string values from the form elements to the internal data structure.
+- `validators` - optional - a JSON object with attributes as keys and functions with parameters (value, item) as value,
+ which validates individual field values when the user wants to add a new row. The validators will be executed after 
+ the `parsers``.
+- `validateItem` - optional - a function with parameter (item) that will be executed after all fields of the form are
+ parsed and validated to allow validating the entire form row to be validated.
+- `validateRemove` - optional - a function with parameter (item) that will be executed when the user tries to remove 
+ a row. If this function returns false, the row will not be removed.
+- `form` - optional - a JSON object providing the data types of the form elements for each row. If this is not supported
+ all `attributes` are considered as text inputs. Supported types are: `number`, `boolean`, `date`, `datetime`, which map
+ to their respective `<input type="...">` tag. Additionally, the user can provide an `Array` of values (which will be 
+ rendered as a drop-down) or a JSON object, where the key of the objects map to the `<option value="...">` and the value
+ behind that key as the display value inside the `<option>...</option>`.
+
+**Display Properties**
+
+- `showHeader` - default `false` - a boolean flag to indicate whether to show column labels of the list
+- `listHeaderStyle` - default `mixins.listHeader` - an overwrite of the list header styles (if `showHeader` is `true`) 
+ that will be used to style the individual header columns above the list of items.
+- `buttonStyle` - default `mixins.button` - an overwrite for the "Add" button underneath the new row form.
+- `lineColors` - default `["#fff", "#fafafa"]` - the colours used for a striped table for the items
+
+**Methods**
+
+- `getItems()` - returns the current list of items - alternatively, you can be notified by the component using the 
+ `update` parameter.
+- `addItem(item)` - adds a new item to the list, this will only execute the validation for the whole element (not 
+ individual attributes)
+- `removeItem(idx)` - removes an item from the list with the given index (0...n-1)
+
 
 ## CSS Mixins
 
