@@ -1,6 +1,6 @@
 {
   "name": "quick-n-dirty-react",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Basic re-usable React components and useful CSS mixins",
   "main": "dist/cjs/index.js",
   "type": "module",
@@ -49,10 +49,7 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.2",
-    "luxon": "^3.0.4",
     "prettier": "^1.16.4",
-    "quick-n-dirty-utils": "^1.0.1",
-    "react": "^18.2.0",
     "rollup": "^3.26.3",
     "rollup-plugin-dts": "^5.3.0",
     "tslib": "^2.6.0",
