@@ -861,7 +861,7 @@ class MyComponent extends React.Component {
                     country: "Country",
                 }}
                 update={this.updateList}
-                formatter={{
+                formatters={{
                     check: booleanFormatter,
                     startTs: datetimeFormatter,
                     endDate: dateFormatter,
@@ -901,7 +901,7 @@ class MyComponent extends React.Component {
  as string value.
 - `update` - optional - a function that will be called, when the list has been changed (items added or removed), it will
  receive the complete list of items as parameter.
-- `formatter` - optional - a JSON object with attributes as keys and functions with parameters (value, item) as value, 
+- `formatters` - optional - a JSON object with attributes as keys and functions with parameters (value, item) as value, 
  which handles the display of values in the list
 - `parsers` - optional - a JSON object with attributes as keys and functions with parameters (value, item) as value, 
  which handles parsing string values from the form elements to the internal data structure.
