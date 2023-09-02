@@ -45,7 +45,7 @@ export interface AdjustableListProps {
     form?: FormConfigurationType,
     parsers?: KeyValueFunctionMapping,
     validators?: KeyValueFunctionMapping,
-    formatter?: KeyValueFunctionMapping,
+    formatters?: KeyValueFunctionMapping,
     validateItem?: (item: KeyValueMapping) => boolean,
     validateRemove?: (item: KeyValueMapping) => boolean,
     update?: (items: KeyValueMapping[]) => void,
@@ -201,13 +201,13 @@ class AdjustableList extends React.Component<AdjustableListProps, AdjustableList
     }
 
     formatValue(attr: string, value: any, item: ItemType): any {
-        // handles formatter
-        if (this.props.formatter != null && this.props.formatter[attr] != null) {
-            return this.props.formatter[attr](value, item)
+        // handles formatters
+        if (this.props.formatters != null && this.props.formatters[attr] != null) {
+            return this.props.formatters[attr](value, item)
         }
 
         // handles form parameters passed in for dropdowns with key, value pairs
-        if (this.props.form != null && this.props.form[attr] != null) {
+        if (this.props.form != null && this.props.form[attr] != null && !["number", "boolean", "date", "datetime"].includes(this.props.form[attr] as string)) {
             const formConfig = this.props.form[attr]
             if ((formConfig as StringMapping)[value as string] != null) {
                 return (formConfig as StringMapping)[value as string]

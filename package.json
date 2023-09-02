@@ -1,6 +1,6 @@
 {
   "name": "quick-n-dirty-react",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Basic re-usable React components and useful CSS mixins",
   "main": "dist/cjs/index.js",
   "type": "module",
